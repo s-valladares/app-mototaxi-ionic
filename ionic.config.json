@@ -1,5 +1,7 @@
 {
   "name": "app-mototaxi-ionic",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }
