@@ -11,6 +11,10 @@ import {
   Environment,
   GoogleMapsAnimation
 } from '@ionic-native/google-maps';
+import { IUbicacion } from 'src/app/services/ubicacion/ubicacion.interface';
+import { FirestoreService } from 'src/app/services/firestore/firestore.service';
+import { delay } from 'q';
+import { debounce, debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-mapa',
@@ -22,31 +26,29 @@ export class MapaPage implements OnInit {
   map: GoogleMap;
   creado = false;
   parar = false;
-
-  public position = {
-    lat: 0,
-    lng: 0
-  };
+  ubicacion: IUbicacion;
+  velocidad: number;
 
   public marker: Marker;
-  public idMarcador: string;
 
   constructor(
-    private geolocation: Geolocation
+    private geolocation: Geolocation,
+    private firestoreService: FirestoreService
   ) {
-    this.idMarcador = '';
+
+    this.ubicacion = {} as IUbicacion;
+    this.velocidad = 0;
   }
 
   ngOnInit() {
     this.watchLocation();
-
   }
 
 
   getLocation() {
     this.geolocation.getCurrentPosition().then((resp) => {
-      this.position.lat = resp.coords.latitude;
-      this.position.lng = resp.coords.longitude;
+      this.ubicacion.lat = resp.coords.latitude;
+      this.ubicacion.lng = resp.coords.longitude;
       if (this.creado === false) {
         this.loadMap();
       }
@@ -60,12 +62,16 @@ export class MapaPage implements OnInit {
     const watch = this.geolocation.watchPosition({
       maximumAge: 3000,
       timeout: 5000,
-      enableHighAccuracy: true
+      enableHighAccuracy: true,
     });
 
     watch.subscribe((data) => {
-      this.position.lat = data.coords.latitude;
-      this.position.lng = data.coords.longitude;
+
+      this.ubicacion.lat = data.coords.latitude;
+      this.ubicacion.lng = data.coords.longitude;
+
+      this.velocidad = data.coords.speed;
+
       if (this.creado === false) {
         this.loadMap();
       }
@@ -89,8 +95,8 @@ export class MapaPage implements OnInit {
       /*title: 'Hello World',
       snippet: '@ionic-native/google-maps',*/
       position: {
-        lat: this.position.lat,
-        lng: this.position.lng
+        lat: this.ubicacion.lat,
+        lng: this.ubicacion.lng
       },
       infoWindowAnchor: [16, 0],
       anchor: [16, 32],
@@ -109,17 +115,33 @@ export class MapaPage implements OnInit {
     };
 
     if (this.marker != null) {
-      this.marker.setPosition({
-        lat: this.position.lat,
-        lng: this.position.lng
-      });
+
+      if (this.velocidad > 2) {
+        this.marker.setPosition({
+          lat: this.ubicacion.lat,
+          lng: this.ubicacion.lng
+        });
+        this.firestoreService.update(this.ubicacion.id, this.ubicacion);
+      }
+
     } else {
+
+
       this.map.addMarker(options).then((marker: Marker) => {
         this.marker = marker;
-        this.idMarcador = marker.getId();
+        this.ubicacion.marcador = marker.getId();
         this.marker.showInfoWindow();
-
+        setTimeout(() => {
+          this.firestoreService.create(this.ubicacion)
+            .then((ubicacion) => {
+              this.ubicacion.id = ubicacion.id;
+              alert('Iniciando watch');
+            }, (error) => {
+              alert(error);
+            });
+        }, 5000);
       });
+
     }
   }
 
@@ -128,8 +150,8 @@ export class MapaPage implements OnInit {
     const mapOptions: GoogleMapOptions = {
       camera: {
         target: {
-          lat: this.position.lat,
-          lng: this.position.lng
+          lat: this.ubicacion.lat,
+          lng: this.ubicacion.lng
         },
         zoom: 18,
         tilt: 30
@@ -148,6 +170,12 @@ export class MapaPage implements OnInit {
   salir() {
     this.parar = true;
     this.marker.remove();
+    this.firestoreService.eliminar(this.ubicacion.id)
+      .then((res) => {
+        alert('Saliendo');
+      }, (error) => {
+        alert(error);
+      });
   }
 
 }

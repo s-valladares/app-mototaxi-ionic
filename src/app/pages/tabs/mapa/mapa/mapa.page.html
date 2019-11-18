@@ -11,9 +11,14 @@
     <h4>Ubicación de mototaxis</h4>
   </ion-text>
   <ion-text>
-    <ion-label>Id: {{idMarcador}}</ion-label>
+    <ion-label>Id: {{ubicacion.id}}</ion-label>
   </ion-text>
+  <div>
+    <ion-text>
+      <ion-label>Velocidad {{velocidad }} m/s </ion-label>
+    </ion-text>
+  </div>
   <ion-button color="primary" (click)="salir()" expand="full">Salir</ion-button>
-    
-    <div id='mapa' style="height: 80%;"></div>
+
+  <div id='mapa' style="height: 80%;"></div>
 </ion-content>
