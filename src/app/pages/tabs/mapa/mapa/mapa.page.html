@@ -6,7 +6,14 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-    <h3>Ionic map starter</h3>
+<ion-content class="ion-no-padding">
+  <ion-text class="ion-text-center" color="primary">
+    <h4>Ubicación de mototaxis</h4>
+  </ion-text>
+  <ion-text>
+    <ion-label>Id: {{idMarcador}}</ion-label>
+  </ion-text>
+  <ion-button color="primary" (click)="salir()" expand="full">Salir</ion-button>
+    
     <div id='mapa' style="height: 80%;"></div>
 </ion-content>
