@@ -10,6 +10,15 @@ export class FirestoreService {
     private firestore: AngularFirestore
   ) { }
 
+
+  public getId(documentId: string) {
+    return this.firestore.collection('ubicaciones').doc(documentId).snapshotChanges();
+  }
+
+  public getAll() {
+    return this.firestore.collection('ubicaciones').snapshotChanges();
+  }
+
   public create(datos) {
     return this.firestore.collection('ubicaciones').add(datos);
   }

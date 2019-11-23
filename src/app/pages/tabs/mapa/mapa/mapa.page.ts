@@ -23,25 +23,34 @@ import { debounce, debounceTime } from 'rxjs/operators';
 })
 export class MapaPage implements OnInit {
 
-  map: GoogleMap;
-  creado = false;
-  parar = false;
-  ubicacion: IUbicacion;
-  velocidad: number;
+  public creado: boolean;
+  public parar: boolean;
+  public velocidad: number;
 
+  public map: GoogleMap;
+
+  public ubicacion: IUbicacion;
   public marker: Marker;
+  public datos: any;
+  public ubicaciones: IUbicacion[];
+  public markers: Marker[];
 
   constructor(
     private geolocation: Geolocation,
     private firestoreService: FirestoreService
   ) {
 
-    this.ubicacion = {} as IUbicacion;
+    this.creado = false;
+    this.parar = false;
     this.velocidad = 0;
+    this.ubicacion = {} as IUbicacion;
+    this.ubicaciones = [];
+    this.datos = [];
   }
 
   ngOnInit() {
     this.watchLocation();
+    this.getAll();
   }
 
 
@@ -72,7 +81,7 @@ export class MapaPage implements OnInit {
 
       this.velocidad = data.coords.speed;
 
-      if (this.creado === false) {
+      if (!this.creado) {
         this.loadMap();
       }
 
@@ -116,13 +125,17 @@ export class MapaPage implements OnInit {
 
     if (this.marker != null) {
 
-      if (this.velocidad > 2) {
-        this.marker.setPosition({
-          lat: this.ubicacion.lat,
-          lng: this.ubicacion.lng
+      this.marker.setPosition({
+        lat: this.ubicacion.lat,
+        lng: this.ubicacion.lng
+      });
+
+      this.firestoreService.update(this.ubicacion.id, this.ubicacion)
+        .then(a => {
+
+        }, error => {
+          alert(error);
         });
-        this.firestoreService.update(this.ubicacion.id, this.ubicacion);
-      }
 
     } else {
 
@@ -131,15 +144,15 @@ export class MapaPage implements OnInit {
         this.marker = marker;
         this.ubicacion.marcador = marker.getId();
         this.marker.showInfoWindow();
-        setTimeout(() => {
-          this.firestoreService.create(this.ubicacion)
-            .then((ubicacion) => {
-              this.ubicacion.id = ubicacion.id;
-              alert('Iniciando watch');
-            }, (error) => {
-              alert(error);
-            });
-        }, 5000);
+
+        this.firestoreService.create(this.ubicacion)
+          .then((ubicacion) => {
+            this.ubicacion.id = ubicacion.id;
+            alert('Iniciando watch');
+          }, (error) => {
+            alert(error);
+          });
+
       });
 
     }
@@ -176,6 +189,23 @@ export class MapaPage implements OnInit {
       }, (error) => {
         alert(error);
       });
+  }
+
+  getAll() {
+    this.firestoreService.getAll().subscribe((data) => {
+      this.datos = [];
+      data.forEach((ubicacion: any) => {
+        this.datos.push({
+          id: ubicacion.payload.doc.id,
+          data: ubicacion.payload.doc.data()
+        });
+      });
+      this.ubicaciones = this.datos;
+    });
+  }
+
+  ver() {
+    alert(this.ubicaciones.length);
   }
 
 }
