@@ -32,7 +32,10 @@ export class MapaPage implements OnInit {
   public ubicacion: IUbicacion;
   public marker: Marker;
   public datos: any;
-  public ubicaciones: IUbicacion[];
+  ubicaciones: any = [{
+    id: '',
+    data: {} as IUbicacion
+  }];
   public markers: Marker[];
 
   constructor(
@@ -49,7 +52,8 @@ export class MapaPage implements OnInit {
   }
 
   ngOnInit() {
-    this.watchLocation();
+    // this.watchLocation();
+    this.getLocation();
     this.getAll();
   }
 
@@ -58,9 +62,10 @@ export class MapaPage implements OnInit {
     this.geolocation.getCurrentPosition().then((resp) => {
       this.ubicacion.lat = resp.coords.latitude;
       this.ubicacion.lng = resp.coords.longitude;
-      if (this.creado === false) {
-        this.loadMap();
-      }
+      this.ubicacion.marcador = 'marker_manual555';
+
+      this.loadMap();
+      this.insertFirestore();
 
     }).catch((error) => {
       alert(error);
@@ -84,15 +89,20 @@ export class MapaPage implements OnInit {
       if (!this.creado) {
         this.loadMap();
       }
-
-      if (!this.parar) {
-        this.agregarMarcador();
-      }
+      /*
+            if (!this.parar) {
+              this.agregarMarcador();
+            }
+      */
     });
 
   }
 
-  agregarMarcador() {
+  moverMarcador() {
+
+  }
+
+  agregarMarcador(ubicacion: IUbicacion) {
     const options: MarkerOptions = {
       icon: {
         url: 'assets/marker_icon.png',
@@ -104,8 +114,8 @@ export class MapaPage implements OnInit {
       /*title: 'Hello World',
       snippet: '@ionic-native/google-maps',*/
       position: {
-        lat: this.ubicacion.lat,
-        lng: this.ubicacion.lng
+        lat: ubicacion.lat,
+        lng: ubicacion.lng
       },
       infoWindowAnchor: [16, 0],
       anchor: [16, 32],
@@ -123,39 +133,35 @@ export class MapaPage implements OnInit {
       disableAutoPan: true
     };
 
-    if (this.marker != null) {
+    this.map.addMarker(options)
+      .then((marker: Marker) => {
 
-      this.marker.setPosition({
-        lat: this.ubicacion.lat,
-        lng: this.ubicacion.lng
+        // this.marker = marker;
+        //  this.ubicacion.marcador = marker.getId();
+        // marker.showInfoWindow();
+
+      }, error => {
+        alert(error);
       });
+    /*
+        if (this.ubicacion.id !== ubicacion.id) {
 
-      this.firestoreService.update(this.ubicacion.id, this.ubicacion)
-        .then(a => {
-
-        }, error => {
-          alert(error);
-        });
-
-    } else {
-
-
-      this.map.addMarker(options).then((marker: Marker) => {
-        this.marker = marker;
-        this.ubicacion.marcador = marker.getId();
-        this.marker.showInfoWindow();
-
-        this.firestoreService.create(this.ubicacion)
-          .then((ubicacion) => {
-            this.ubicacion.id = ubicacion.id;
-            alert('Iniciando watch');
-          }, (error) => {
-            alert(error);
+          this.marker.setPosition({
+            lat: this.ubicacion.lat,
+            lng: this.ubicacion.lng
           });
 
-      });
+        } else {
 
-    }
+          this.map.addMarker(options).then((marker: Marker) => {
+            this.marker = marker;
+            this.ubicacion.marcador = marker.getId();
+            this.marker.showInfoWindow();
+
+          });
+
+        }
+      */
   }
 
   loadMap() {
@@ -192,20 +198,47 @@ export class MapaPage implements OnInit {
   }
 
   getAll() {
-    this.firestoreService.getAll().subscribe((data) => {
-      this.datos = [];
-      data.forEach((ubicacion: any) => {
-        this.datos.push({
-          id: ubicacion.payload.doc.id,
-          data: ubicacion.payload.doc.data()
+    this.firestoreService.getAll().subscribe((ubicaciones) => {
+      this.ubicaciones = [];
+      ubicaciones.forEach((datos: any) => {
+        
+        this.ubicaciones.push({
+          id: datos.payload.doc.id,
+          data: datos.payload.doc.data()
         });
       });
-      this.ubicaciones = this.datos;
+      this.ver();
     });
   }
 
   ver() {
-    alert(this.ubicaciones.length);
+    // alert(this.ubicaciones.length);
+
+    this.ubicaciones.forEach(data => {
+      // alert(data.data.lat);
+      this.agregarMarcador(data.data);
+    });
   }
+
+  insertFirestore() {
+    this.firestoreService.create(this.ubicacion)
+      .then((ubicacion) => {
+        this.ubicacion.id = ubicacion.id;
+        alert('Iniciando watch');
+      }, (error) => {
+        alert(error);
+      });
+  }
+
+  updateFirestore() {
+    this.firestoreService.update(this.ubicacion.id, this.ubicacion)
+      .then(a => {
+
+      }, error => {
+        alert(error);
+      });
+  }
+
+
 
 }
