@@ -26,17 +26,18 @@ export class MapaPage implements OnInit {
   public creado: boolean;
   public parar: boolean;
   public velocidad: number;
+  public optionsMarker: MarkerOptions;
+  public mapOptions: GoogleMapOptions;
 
   public map: GoogleMap;
+  public temporal: IUbicacion;
 
   public ubicacion: IUbicacion;
   public marker: Marker;
+  public idMarcador: string;
   public datos: any;
-  ubicaciones: any = [{
-    id: '',
-    data: {} as IUbicacion
-  }];
-  public markers: Marker[];
+  ubicaciones: IUbicacion[];
+  public markers: any[];
 
   constructor(
     private geolocation: Geolocation,
@@ -47,8 +48,10 @@ export class MapaPage implements OnInit {
     this.parar = false;
     this.velocidad = 0;
     this.ubicacion = {} as IUbicacion;
+    this.temporal = {} as IUbicacion;
     this.ubicaciones = [];
     this.datos = [];
+    this.idMarcador = '';
   }
 
   ngOnInit() {
@@ -57,15 +60,19 @@ export class MapaPage implements OnInit {
     this.getAll();
   }
 
+  ionViewDidLoad() {
+    // your code;
+  }
+
 
   getLocation() {
     this.geolocation.getCurrentPosition().then((resp) => {
       this.ubicacion.lat = resp.coords.latitude;
       this.ubicacion.lng = resp.coords.longitude;
-      this.ubicacion.marcador = 'marker_manual555';
 
+      this.configMarkerMap();
       this.loadMap();
-      this.insertFirestore();
+
 
     }).catch((error) => {
       alert(error);
@@ -102,8 +109,9 @@ export class MapaPage implements OnInit {
 
   }
 
-  agregarMarcador(ubicacion: IUbicacion) {
-    const options: MarkerOptions = {
+  agregarMarcador(lati, lngi) {
+
+    this.optionsMarker = {
       icon: {
         url: 'assets/marker_icon.png',
         size: {
@@ -111,11 +119,10 @@ export class MapaPage implements OnInit {
           height: 24
         }
       },
-      /*title: 'Hello World',
-      snippet: '@ionic-native/google-maps',*/
+
       position: {
-        lat: ubicacion.lat,
-        lng: ubicacion.lng
+        lat: lati,
+        lng: lngi
       },
       infoWindowAnchor: [16, 0],
       anchor: [16, 32],
@@ -133,16 +140,23 @@ export class MapaPage implements OnInit {
       disableAutoPan: true
     };
 
-    this.map.addMarker(options)
-      .then((marker: Marker) => {
+    this.optionsMarker.position.lat = lati;
+    this.optionsMarker.position.lng = lngi;
 
-        // this.marker = marker;
-        //  this.ubicacion.marcador = marker.getId();
-        // marker.showInfoWindow();
+    this.map.addMarkerSync(this.optionsMarker);
 
-      }, error => {
-        alert(error);
-      });
+
+    // this.activar();
+    /*
+        this.map.addMarker(this.optionsMarker)
+          .then((marker: Marker) => {
+            this.idMarcador = marker.getId();
+            alert(this.idMarcador);
+          }, error => {
+            alert(error);
+          });
+    */
+
     /*
         if (this.ubicacion.id !== ubicacion.id) {
 
@@ -162,11 +176,12 @@ export class MapaPage implements OnInit {
 
         }
       */
+
   }
 
   loadMap() {
 
-    const mapOptions: GoogleMapOptions = {
+    this.mapOptions = {
       camera: {
         target: {
           lat: this.ubicacion.lat,
@@ -177,18 +192,19 @@ export class MapaPage implements OnInit {
       }
     };
 
-    this.map = GoogleMaps.create('mapa', mapOptions);
+    this.map = GoogleMaps.create('mapa', this.mapOptions);
     this.map.one(GoogleMapsEvent.MAP_READY).then(this.onMapReady.bind(this));
-
   }
 
   onMapReady() {
     this.creado = true;
+    this.insertLocFb();
+
   }
 
   salir() {
-    this.parar = true;
-    this.marker.remove();
+    // this.parar = true;
+    // this.marker.remove();
     this.firestoreService.eliminar(this.ubicacion.id)
       .then((res) => {
         alert('Saliendo');
@@ -197,37 +213,30 @@ export class MapaPage implements OnInit {
       });
   }
 
+
   getAll() {
-    this.firestoreService.getAll().subscribe((ubicaciones) => {
-      this.ubicaciones = [];
-      ubicaciones.forEach((datos: any) => {
-        
-        this.ubicaciones.push({
-          id: datos.payload.doc.id,
-          data: datos.payload.doc.data()
-        });
-      });
-      this.ver();
-    });
+    this.firestoreService.getAll()
+      .subscribe((ubicaciones) => {
+
+        this.ubicaciones = [];
+
+        ubicaciones
+          .forEach((datos: any) => {
+            this.ubicaciones.push(datos.payload.doc.data());
+            this.agregarMarcador(datos.payload.doc.data().lat, datos.payload.doc.data().lng);
+
+          });
+
+      }, error => alert(error));
+
   }
 
-  ver() {
-    // alert(this.ubicaciones.length);
+  insertLocFb() {
 
-    this.ubicaciones.forEach(data => {
-      // alert(data.data.lat);
-      this.agregarMarcador(data.data);
-    });
-  }
-
-  insertFirestore() {
     this.firestoreService.create(this.ubicacion)
-      .then((ubicacion) => {
-        this.ubicacion.id = ubicacion.id;
-        alert('Iniciando watch');
-      }, (error) => {
-        alert(error);
-      });
+      .then(ubicacion => this.ubicacion.id = ubicacion.id)
+      .catch(error => alert(error));
+
   }
 
   updateFirestore() {
@@ -240,5 +249,46 @@ export class MapaPage implements OnInit {
   }
 
 
+  configMarkerMap() {
+    this.optionsMarker = {
+      icon: {
+        url: 'assets/marker_icon.png',
+        size: {
+          width: 32,
+          height: 24
+        }
+      },
+
+      position: {
+        lat: this.ubicacion.lat,
+        lng: this.ubicacion.lng
+      },
+      infoWindowAnchor: [16, 0],
+      anchor: [16, 32],
+      draggable: true,
+      flat: false,
+      rotation: 32,
+      visible: true,
+      styles: {
+        'text-align': 'center',
+        'font-style': 'italic',
+        'font-weight': 'bold'
+      },
+      animation: GoogleMapsAnimation.DROP,
+      zIndex: 0,
+      disableAutoPan: true
+    };
+
+    this.mapOptions = {
+      camera: {
+        target: {
+          lat: this.ubicacion.lat,
+          lng: this.ubicacion.lng
+        },
+        zoom: 18,
+        tilt: 30
+      }
+    };
+  }
 
 }
