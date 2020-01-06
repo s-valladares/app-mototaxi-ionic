@@ -11,7 +11,7 @@ import {
   Environment,
   GoogleMapsAnimation
 } from '@ionic-native/google-maps';
-import { IUbicacion } from 'src/app/services/ubicacion/ubicacion.interface';
+import { IUbicacion, Ubicacion } from 'src/app/services/ubicacion/ubicacion.interface';
 import { FirestoreService } from 'src/app/services/firestore/firestore.service';
 import { delay } from 'q';
 import { debounce, debounceTime } from 'rxjs/operators';
@@ -26,18 +26,17 @@ export class MapaPage implements OnInit {
   public creado: boolean;
   public parar: boolean;
   public velocidad: number;
+
   public optionsMarker: MarkerOptions;
   public mapOptions: GoogleMapOptions;
 
   public map: GoogleMap;
-  public temporal: IUbicacion;
 
   public ubicacion: IUbicacion;
+  public ubicaciones: IUbicacion[];
   public marker: Marker;
-  public idMarcador: string;
-  public datos: any;
-  ubicaciones: IUbicacion[];
   public markers: any[];
+  public idMarcador: string;
 
   constructor(
     private geolocation: Geolocation,
@@ -47,10 +46,8 @@ export class MapaPage implements OnInit {
     this.creado = false;
     this.parar = false;
     this.velocidad = 0;
-    this.ubicacion = {} as IUbicacion;
-    this.temporal = {} as IUbicacion;
+    this.ubicacion = Ubicacion.empty();
     this.ubicaciones = [];
-    this.datos = [];
     this.idMarcador = '';
   }
 
@@ -70,9 +67,7 @@ export class MapaPage implements OnInit {
       this.ubicacion.lat = resp.coords.latitude;
       this.ubicacion.lng = resp.coords.longitude;
 
-      this.configMarkerMap();
       this.loadMap();
-
 
     }).catch((error) => {
       alert(error);
@@ -135,7 +130,7 @@ export class MapaPage implements OnInit {
         'font-style': 'italic',
         'font-weight': 'bold'
       },
-      animation: GoogleMapsAnimation.DROP,
+
       zIndex: 0,
       disableAutoPan: true
     };
@@ -143,7 +138,7 @@ export class MapaPage implements OnInit {
     this.optionsMarker.position.lat = lati;
     this.optionsMarker.position.lng = lngi;
 
-    this.map.addMarkerSync(this.optionsMarker);
+    return this.map.addMarkerSync(this.optionsMarker);
 
 
     // this.activar();
@@ -192,27 +187,24 @@ export class MapaPage implements OnInit {
       }
     };
 
+
     this.map = GoogleMaps.create('mapa', this.mapOptions);
     this.map.one(GoogleMapsEvent.MAP_READY).then(this.onMapReady.bind(this));
   }
 
   onMapReady() {
     this.creado = true;
-    this.insertLocFb();
-
   }
 
   salir() {
     // this.parar = true;
-    // this.marker.remove();
+    this.marker.remove();
     this.firestoreService.eliminar(this.ubicacion.id)
       .then((res) => {
-        alert('Saliendo');
       }, (error) => {
         alert(error);
       });
   }
-
 
   getAll() {
     this.firestoreService.getAll()
@@ -222,8 +214,16 @@ export class MapaPage implements OnInit {
 
         ubicaciones
           .forEach((datos: any) => {
+
             this.ubicaciones.push(datos.payload.doc.data());
-            this.agregarMarcador(datos.payload.doc.data().lat, datos.payload.doc.data().lng);
+
+            try {
+              if (datos.payload.doc.data().marcador !== this.ubicacion.marcador) {
+                this.agregarMarcador(datos.payload.doc.data().lat, datos.payload.doc.data().lng);
+              }
+            } catch (error) {
+              alert(error);
+            }
 
           });
 
@@ -232,6 +232,9 @@ export class MapaPage implements OnInit {
   }
 
   insertLocFb() {
+
+    this.marker = this.agregarMarcador(this.ubicacion.lat, this.ubicacion.lng);
+    this.ubicacion.marcador = this.marker.getId();
 
     this.firestoreService.create(this.ubicacion)
       .then(ubicacion => this.ubicacion.id = ubicacion.id)
@@ -246,49 +249,6 @@ export class MapaPage implements OnInit {
       }, error => {
         alert(error);
       });
-  }
-
-
-  configMarkerMap() {
-    this.optionsMarker = {
-      icon: {
-        url: 'assets/marker_icon.png',
-        size: {
-          width: 32,
-          height: 24
-        }
-      },
-
-      position: {
-        lat: this.ubicacion.lat,
-        lng: this.ubicacion.lng
-      },
-      infoWindowAnchor: [16, 0],
-      anchor: [16, 32],
-      draggable: true,
-      flat: false,
-      rotation: 32,
-      visible: true,
-      styles: {
-        'text-align': 'center',
-        'font-style': 'italic',
-        'font-weight': 'bold'
-      },
-      animation: GoogleMapsAnimation.DROP,
-      zIndex: 0,
-      disableAutoPan: true
-    };
-
-    this.mapOptions = {
-      camera: {
-        target: {
-          lat: this.ubicacion.lat,
-          lng: this.ubicacion.lng
-        },
-        zoom: 18,
-        tilt: 30
-      }
-    };
   }
 
 }

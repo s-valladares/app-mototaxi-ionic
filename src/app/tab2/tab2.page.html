@@ -6,4 +6,11 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content></ion-content>
+<ion-content>
+  <div>{{a}}</div>
+  <div *ngFor="let item of ubicaciones">
+    <ion-item>
+      {{ item.lat }} {{ item.lng }}
+    </ion-item>
+  </div>
+</ion-content>

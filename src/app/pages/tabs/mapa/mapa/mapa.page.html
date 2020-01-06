@@ -21,11 +21,7 @@
   <ion-button color="primary" (click)="salir()" expand="full">Salir</ion-button>
   <ion-button color="secondary" (click)="insertLocFb()" expand="full">Activar</ion-button>
   
-  <div *ngFor="let item of ubicaciones">
-    <ion-item>
-      {{ item.lat }} {{ item.lng }}
-    </ion-item>
-  </div>
+  
 
   <div id='mapa' style="height: 80%;"></div>
 </ion-content>

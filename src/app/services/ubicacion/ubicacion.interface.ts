@@ -11,7 +11,7 @@ export interface IUbicacion {
 }
 
 export class Ubicacion {
-    static empy() {
+    static empty() {
       return {
         id: '',
         lat: 0,
