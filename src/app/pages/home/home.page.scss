@@ -1,0 +1,29 @@
+active {
+    --ion-text-color: var(--ion-color-primary);
+  
+    ion-icon {
+        --ion-text-color-rgb: var(--ion-color-primary);
+    }
+  }
+  
+  .parent-active {
+    font-weight: 500;
+  }
+  
+  .sub-item {
+    padding-left: 20px;
+    font-size: small;
+  }
+  ion-title {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0 90px 1px;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+  } 
+
+
+  
+  

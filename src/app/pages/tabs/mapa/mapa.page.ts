@@ -53,8 +53,8 @@ export class MapaPage implements OnInit {
 
   ngOnInit() {
     // this.watchLocation();
-    this.getLocation();
-    this.getAll();
+    //this.getLocation();
+    //this.getAll();
   }
 
   ionViewDidLoad() {

@@ -1,0 +1,80 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-button slot="end" fill="clear" color="dark" (click)=cerarModal()>
+      <ion-icon name="close"></ion-icon>
+    </ion-button>
+    <ion-title *ngIf="notificaciones">Notificaciones</ion-title>
+    <ion-title *ngIf="foto">Foto del perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngIf="notificaciones">
+      <ion-icon name="notifications-outline" slot="start"></ion-icon>
+      <ion-label>
+        {{mensaje}}
+      </ion-label>
+      <ion-toggle color="primary" [checked]="checked" (ionChange)="cambiar()"></ion-toggle>
+    </ion-item>
+  </ion-list>
+
+  <div *ngIf="foto">
+
+    <div style="padding-left: 20px;">
+      <ion-row>
+
+        <ion-col>
+          <div>
+            <ion-avatar class="centrar ion-activatable" (click)="eliminarFoto()">
+              <img src="../../../../assets/icon/delete.svg">
+              <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+            </ion-avatar>
+            <div style="margin-top: -10px;">
+              <ion-text>
+                <p>Eliminar</p>
+              </ion-text>
+            </div>
+          </div>
+        </ion-col>
+
+        <ion-col>
+          <div>
+            <ion-avatar class="centrar ion-activatable" (click)="abrirGaleria()">
+              <img src="../../../../assets/icon/galeria.svg">
+              <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+            </ion-avatar>
+            <div style="margin-top: -10px;">
+              <ion-text>
+                <p>Galería</p>
+              </ion-text>
+            </div>
+          </div>
+        </ion-col>
+
+        <ion-col>
+          <div>
+            <ion-avatar class="centrar ion-activatable" (click)="abrirCamara()">
+              <img src="../../../../assets/icon/camera.svg">
+              <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+            </ion-avatar>
+            <div style="margin-top: -10px;">
+              <ion-text>
+                <p>Cámara</p>
+              </ion-text>
+            </div>
+          </div>
+        </ion-col>
+
+      </ion-row>
+
+
+
+
+
+
+
+    </div>
+
+  </div>
+</ion-content>
