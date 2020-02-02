@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { IUsuario } from 'src/app/services/interfaces.index';
+import { AuthService } from 'src/app/services/services.index';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
@@ -15,15 +17,44 @@ export class LoginPage implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    private authService: AuthService,
+    public toastController: ToastController
   ) { }
 
   ngOnInit() {
+    this.loginForm = this.formBuilder.group({
+      username: [null],
+      password: [null]
+    });
   }
 
-  ir() {
-    this.router.navigate(['/home']);
+  onFormSubmit() {
 
+    this.mLogin = this.loginForm.value as IUsuario;
+
+    this.authService.Login(this.mLogin)
+      .then(res => {
+        this.authService.isLoggedIn = res.token;
+        localStorage.setItem('fly', res.token);
+        this.router.navigate(['/home']);
+        console.log(res.token);
+
+      }).catch(error => {
+        console.log(error);
+        this.presentToast('Credenciales Invalidas');
+      });
+
+
+  }
+
+  async presentToast(msg) {
+    const toast = await this.toastController.create({
+      message: msg,
+      duration: 2000,
+      position: 'bottom'
+    });
+    toast.present();
   }
 
 }
