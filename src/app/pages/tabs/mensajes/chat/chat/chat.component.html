@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-button slot="end" fill="clear" color="light" (click)=cerrarChat()>
+      <ion-icon name="close"></ion-icon>
+    </ion-button>
+    <ion-avatar slot="start" class="avatar">
+      <ion-img [src]="urlAvatar">
+      </ion-img>
+    </ion-avatar>
+    <ion-title>{{idUsuario}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content >
+  <div style="margin-left: 10px;" *ngFor="let item of mensajes">
+    <div>
+      <p>{{item.mensaje}}</p>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-item>
+    <ion-textarea [(ngModel)]="mensaje" autofocus="true">
+    </ion-textarea>
+    <ion-button color="primary" (click)="enviarMensaje()">
+      <ion-icon name="send"></ion-icon>
+    </ion-button>
+  </ion-item>
+</ion-footer>

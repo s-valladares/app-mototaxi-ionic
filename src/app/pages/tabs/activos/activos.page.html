@@ -13,15 +13,26 @@
     
     <ion-row>
       <ion-col>
-        <ion-button expand="full" (ionFocus)="clickCercanos()">Cercanos</ion-button>
+        <ion-button [color]="focusCerca" expand="full" (ionFocus)="clickCercanos()">Cercanos</ion-button>
       </ion-col>
 
       <ion-col>
-        <ion-button expand="full" (ionFocus)="clickPreferidos()">Preferidos</ion-button>
+        <ion-button  [color]="focusPreferido" expand="full" (ionFocus)="clickPreferidos()">Preferidos</ion-button>
       </ion-col>
     </ion-row>
 
 
   </ion-list>
+
+  <div *ngIf="clCercanos">
+
+
+  </div>
+
+  <div *ngIf="clPreferidos">
+
+    
+
+  </div>
 
 </ion-content>

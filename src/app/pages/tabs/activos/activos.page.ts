@@ -9,10 +9,14 @@ export class ActivosPage implements OnInit {
 
   clCercanos: boolean;
   clPreferidos: boolean;
+  focusCerca: string;
+  focusPreferido: string;
 
   constructor() {
     this.clCercanos = true;
     this.clPreferidos = false;
+    this.focusCerca = 'pressed';
+    this.focusPreferido = 'primary';
   }
 
   ngOnInit() {
@@ -21,6 +25,10 @@ export class ActivosPage implements OnInit {
   clickCercanos() {
     this.clPreferidos = false;
     this.clCercanos = true;
+
+    this.focusCerca = 'pressed';
+    this.focusPreferido = 'primary';
+
     console.log('Cerca: ', this.clCercanos);
     console.log('Preferidos: ', this.clPreferidos);
   }
@@ -28,6 +36,10 @@ export class ActivosPage implements OnInit {
   clickPreferidos() {
     this.clCercanos = false;
     this.clPreferidos = true;
+
+    this.focusCerca = 'primary';
+    this.focusPreferido = 'pressed';
+
     console.log('Cerca: ', this.clCercanos);
     console.log('Preferidos: ', this.clPreferidos);
   }

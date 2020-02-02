@@ -5,6 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { HomePage } from './home.page';
 import { SettingsComponent } from '../settings/settings/settings.component';
+import { ChatComponent } from '../Tabs/mensajes/chat/chat/chat.component';
 
 const routes: Routes = [{
   path: '',
@@ -49,10 +50,12 @@ const routes: Routes = [{
   ],
   declarations: [
     HomePage,
-    SettingsComponent
+    SettingsComponent,
+    ChatComponent
   ],
   entryComponents: [
-    SettingsComponent
+    SettingsComponent,
+    ChatComponent
   ]
 })
 export class HomePageModule { }

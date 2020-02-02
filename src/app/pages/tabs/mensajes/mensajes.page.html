@@ -1,12 +1,50 @@
 <ion-header>
   <ion-toolbar color="primary">
-      <ion-buttons slot="start">
-          <ion-menu-button></ion-menu-button>
-      </ion-buttons>
-      <ion-title>Mensajes</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Mensajes</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+
+  <ion-list>
+    <ion-list-header>
+      Conversaciones recientes
+    </ion-list-header>
+
+    <ion-item (click)="abrirChat(1)">
+      <ion-avatar slot="start">
+        <img [src]="urlAvatar">
+      </ion-avatar>
+      <ion-label>
+        <h2><b>Usuario 1</b></h2>
+        <p>Parte inicial del mensaje...</p>
+      </ion-label>
+    </ion-item>
+
+    <ion-item (click)="abrirChat(2)">
+      <ion-avatar slot="start">
+        <img [src]="urlAvatar">
+      </ion-avatar>
+      <ion-label>
+        <h2><b>Usuario 2</b></h2>
+        <p>Parte inicial del mensaje...</p>
+      </ion-label>
+    </ion-item>
+
+    <ion-item (click)="abrirChat(3)">
+      <ion-avatar slot="start">
+        <img [src]="urlAvatar">
+      </ion-avatar>
+      <ion-label>
+        <h2><b>Usuario 3</b></h2>
+        <p>Parte inicial del mensaje...</p>
+      </ion-label>
+    </ion-item>
+
+
+  </ion-list>
 
 </ion-content>
