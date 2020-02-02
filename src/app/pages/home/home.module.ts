@@ -31,6 +31,10 @@ const routes: Routes = [{
       {
         path: 'mensajes',
         loadChildren: () => import('../Tabs/mensajes/mensajes.module').then( m => m.MensajesPageModule)
+      },
+      {
+        path: 'register',
+        loadChildren: () => import('../Usuario/register/register.module').then( m => m.RegisterPageModule)
       }
 
     ]

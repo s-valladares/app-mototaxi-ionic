@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, AlertController } from '@ionic/angular';
 import { SettingsComponent } from '../settings/settings/settings.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -29,7 +30,8 @@ export class HomePage implements OnInit {
   ];
   constructor(
     public modalController: ModalController,
-    public alertController: AlertController
+    public alertController: AlertController,
+    public router: Router
   ) { }
 
   ngOnInit() {
@@ -40,10 +42,10 @@ export class HomePage implements OnInit {
       this.presentModal();
     }
     if (p.title === 'Logout') {
-      // this.logout();
+      this.logout();
     }
   }
-/*
+
   async logout() {
     const alert = await this.alertController.create({
       header: '¿Cerrar sesión?',
@@ -59,7 +61,8 @@ export class HomePage implements OnInit {
         }, {
           text: 'Salir',
           handler: () => {
-            this.authService.logout();
+            // this.authService.logout();
+            this.router.navigate(['/login']);
           }
         }
       ]
@@ -67,7 +70,7 @@ export class HomePage implements OnInit {
 
     await alert.present();
   }
-*/
+
   async presentModal() {
     const modal = await this.modalController.create({
       component: SettingsComponent,
