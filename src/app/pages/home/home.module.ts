@@ -23,6 +23,14 @@ const routes: Routes = [{
       {
         path: 'perfil',
         loadChildren: () => import('../Usuario/perfil/perfil.module').then(m => m.PerfilPageModule)
+      },
+      {
+        path: 'activos',
+        loadChildren: () => import('../Tabs/activos/activos.module').then( m => m.ActivosPageModule)
+      },
+      {
+        path: 'mensajes',
+        loadChildren: () => import('../Tabs/mensajes/mensajes.module').then( m => m.MensajesPageModule)
       }
 
     ]
