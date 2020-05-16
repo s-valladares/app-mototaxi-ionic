@@ -1,20 +1,20 @@
 import { IUsuario, Usuario } from '../Usuarios/usuario.interface';
 
-export interface IPilotosRs {
+export interface IUbicacionesRs {
     size: number;
-    rows: IPilotos[];
+    rows: IUbicaciones[];
 }
 
-export interface IPilotos {
+export interface IUbicaciones {
     id: string;
     usuario: IUsuario;
-    licencia?: boolean;
-    activo: boolean;
+    latitud?: boolean;
+    longitud: boolean;
     createdAt?: string;
     updatedAt?: string;
 }
 
-export class Pilotos {
+export class Ubicaciones {
     static empty() {
         return {
             id: '',
@@ -26,3 +26,4 @@ export class Pilotos {
         };
     }
 }
+

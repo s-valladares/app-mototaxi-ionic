@@ -13,7 +13,10 @@ import { PilotosService } from 'src/app/services/Pilotos/pilotos.service';
 export class ActivosPage implements OnInit {
 
   private ubicaciones: IUbicacion[];
+  pilotos: any[];
   private client: Client;
+
+  urlAvatar: string;
 
   constructor(
     private firestoreService: FirestoreService,
@@ -24,6 +27,8 @@ export class ActivosPage implements OnInit {
 
   ngOnInit() {
 
+    this.urlAvatar = '../../../../assets/icon/usuario.svg';
+
     this.getAllPilotos();
 
     this.client = new Client();
@@ -33,10 +38,18 @@ export class ActivosPage implements OnInit {
 
     this.client.onConnect = (frame) => {
       console.log('Conectado: ' + this.client.connected);
+
+      this.client.subscribe('/ubicaciones/ubicacion', e => {
+        let mensaje = JSON.parse(e.body);
+        console.log(mensaje);
+      });
     };
 
-    this.client.activate();
+    this.client.onDisconnect = (frame) => {
+      console.log('Desconectado');
+    }
 
+    this.conectarWSocket();
 
     // this.getAllActivos();
   }
@@ -72,6 +85,7 @@ export class ActivosPage implements OnInit {
   getAllPilotos() {
     this.service.getAll()
       .then(data => {
+        this.pilotos = data.rows;
         console.log(data);
       })
       .catch(error => {
@@ -79,6 +93,26 @@ export class ActivosPage implements OnInit {
 
       });
   }
+
+  conectarWSocket() {
+    this.client.activate();
+  }
+
+  desconectarWSocket() {
+    this.client.deactivate();
+  }
+
+
+  ngOnDestroy() {
+    this.desconectarWSocket();
+  }
+
+  enviarMensaje() {
+    this.client.publish({destination: '/api/ubicacion', body: JSON.stringify('3.22')});
+  }
+
 }
+
+
 
 

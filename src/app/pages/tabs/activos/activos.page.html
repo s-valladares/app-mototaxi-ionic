@@ -17,7 +17,7 @@
       <ion-label>Preferidos</ion-label>
       <ion-icon name="heart"></ion-icon>
     </ion-segment-button>
-    <ion-segment-button  value="cercanos">
+    <ion-segment-button value="cercanos">
       <ion-label>Cercanos</ion-label>
       <ion-icon name="alarm"></ion-icon>
     </ion-segment-button>
@@ -28,6 +28,16 @@
   </ion-segment>
 
   <ion-list>
+
+    <ion-item (click)="abrirChat(1)" *ngFor="let item of pilotos">
+      <ion-avatar slot="start">
+        <img [src]="urlAvatar">
+      </ion-avatar>
+      <ion-label>
+        <h2><b>{{item.usuario.persona.nombres}} {{item.usuario.persona.apellidos}}</b></h2>
+        <p>Dirección</p>
+      </ion-label>
+    </ion-item>
     <!--
     <ion-row>
       <ion-col>
@@ -42,15 +52,5 @@
 
   </ion-list>
 
-  <div *ngIf="clCercanos">
-
-
-  </div>
-
-  <div *ngIf="clPreferidos">
-
-
-
-  </div>
 
 </ion-content>
