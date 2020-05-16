@@ -247,13 +247,16 @@ export class MapaPage implements OnInit {
 
   insertLocFb() {
 
+    
+
+/*
     this.marker = this.agregarMarcador(this.ubicacion.lat, this.ubicacion.lng);
     this.ubicacion.marcador = this.marker.getId();
 
     this.firestoreService.create(this.ubicacion)
       .then(ubicacion => this.ubicacion.id = ubicacion.id)
       .catch(error => alert(error));
-
+*/
   }
 
   updateFirestore() {

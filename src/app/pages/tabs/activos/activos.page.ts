@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FirestoreService } from 'src/app/services/firestore/firestore.service';
 import { IUbicacion } from 'src/app/services/ubicacion/ubicacion.interface';
+import { Client } from '@stomp/stompjs';
+import * as SockJS from 'sockjs-client';
+import { PilotosService } from 'src/app/services/Pilotos/pilotos.service';
 
 @Component({
   selector: 'app-activos',
@@ -9,16 +12,33 @@ import { IUbicacion } from 'src/app/services/ubicacion/ubicacion.interface';
 })
 export class ActivosPage implements OnInit {
 
-  public ubicaciones: IUbicacion[];
+  private ubicaciones: IUbicacion[];
+  private client: Client;
 
   constructor(
     private firestoreService: FirestoreService,
+    private service: PilotosService
   ) {
 
   }
 
   ngOnInit() {
-    this.getAllActivos();
+
+    this.getAllPilotos();
+
+    this.client = new Client();
+    this.client.webSocketFactory = () => {
+      return new SockJS('http://localhost:5000/mototaxis');
+    };
+
+    this.client.onConnect = (frame) => {
+      console.log('Conectado: ' + this.client.connected);
+    };
+
+    this.client.activate();
+
+
+    // this.getAllActivos();
   }
 
   segmentChanged(ev: any) {
@@ -49,4 +69,16 @@ export class ActivosPage implements OnInit {
 
   }
 
+  getAllPilotos() {
+    this.service.getAll()
+      .then(data => {
+        console.log(data);
+      })
+      .catch(error => {
+        console.log(error);
+
+      });
+  }
 }
+
+
