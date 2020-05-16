@@ -15,6 +15,7 @@ import { IUbicacion, Ubicacion } from 'src/app/services/ubicacion/ubicacion.inte
 import { FirestoreService } from 'src/app/services/firestore/firestore.service';
 import { delay } from 'q';
 import { debounce, debounceTime } from 'rxjs/operators';
+import { AuthService } from 'src/app/services/services.index';
 
 @Component({
   selector: 'app-mapa',
@@ -40,7 +41,8 @@ export class MapaPage implements OnInit {
 
   constructor(
     private geolocation: Geolocation,
-    private firestoreService: FirestoreService
+    private firestoreService: FirestoreService,
+    private service: AuthService,
   ) {
 
     this.creado = false;
@@ -53,12 +55,24 @@ export class MapaPage implements OnInit {
 
   ngOnInit() {
     // this.watchLocation();
-    //this.getLocation();
-    //this.getAll();
+    // this.getLocation();
+    // this.getAll();
+    // this.getAllBlog();
   }
 
   ionViewDidLoad() {
     // your code;
+  }
+
+  getAllBlog() {
+    this.service.Blog()
+      .then(data => {
+        console.log(data);
+
+      }).catch(error => {
+
+        console.log(error);
+      });
   }
 
 

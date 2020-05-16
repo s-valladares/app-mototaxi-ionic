@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { FirestoreService } from 'src/app/services/firestore/firestore.service';
+import { IUbicacion } from 'src/app/services/ubicacion/ubicacion.interface';
 
 @Component({
   selector: 'app-activos',
@@ -7,42 +9,44 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ActivosPage implements OnInit {
 
-  clCercanos: boolean;
-  clPreferidos: boolean;
-  focusCerca: string;
-  focusPreferido: string;
+  public ubicaciones: IUbicacion[];
 
-  constructor() {
-    this.clCercanos = true;
-    this.clPreferidos = false;
-    this.focusCerca = 'pressed';
-    this.focusPreferido = 'primary';
+  constructor(
+    private firestoreService: FirestoreService,
+  ) {
+
   }
 
   ngOnInit() {
+    this.getAllActivos();
   }
 
-  clickCercanos() {
-    this.clPreferidos = false;
-    this.clCercanos = true;
-
-    this.focusCerca = 'pressed';
-    this.focusPreferido = 'primary';
-
-    console.log('Cerca: ', this.clCercanos);
-    console.log('Preferidos: ', this.clPreferidos);
+  segmentChanged(ev: any) {
+    console.log('Segmento activo: ', ev.detail.value);
   }
 
-  clickPreferidos() {
-    this.clCercanos = false;
-    this.clPreferidos = true;
+  getAllActivos() {
+    this.firestoreService.getAllPilotos()
+      .subscribe((ubicaciones) => {
 
-    this.focusCerca = 'primary';
-    this.focusPreferido = 'pressed';
+        this.ubicaciones = [];
 
-    console.log('Cerca: ', this.clCercanos);
-    console.log('Preferidos: ', this.clPreferidos);
+        ubicaciones
+          .forEach((datos: any) => {
+
+            this.ubicaciones.push(datos.payload.doc.data());
+
+            try {
+
+            } catch (error) {
+              alert(error);
+            }
+
+          });
+        console.log(this.ubicaciones);
+
+      }, error => alert(error));
+
   }
-
 
 }

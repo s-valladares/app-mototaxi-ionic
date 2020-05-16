@@ -1,16 +1,34 @@
 <ion-header>
   <ion-toolbar color="primary">
-      <ion-buttons slot="start">
-          <ion-menu-button></ion-menu-button>
-      </ion-buttons>
-      <ion-title>Activos</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Activos</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
+
+  <!-- Default Segment -->
+  <!-- Label only -->
+  <ion-segment (ionChange)="segmentChanged($event)" value="todos">
+    <ion-segment-button value="prferidos">
+      <ion-label>Preferidos</ion-label>
+      <ion-icon name="heart"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button  value="cercanos">
+      <ion-label>Cercanos</ion-label>
+      <ion-icon name="alarm"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value="todos">
+      <ion-label>Todos</ion-label>
+      <ion-icon name="people"></ion-icon>
+    </ion-segment-button>
+  </ion-segment>
+
   <ion-list>
-    
+    <!--
     <ion-row>
       <ion-col>
         <ion-button [color]="focusCerca" expand="full" (ionFocus)="clickCercanos()">Cercanos</ion-button>
@@ -20,7 +38,7 @@
         <ion-button  [color]="focusPreferido" expand="full" (ionFocus)="clickPreferidos()">Preferidos</ion-button>
       </ion-col>
     </ion-row>
-
+-->
 
   </ion-list>
 
@@ -31,7 +49,7 @@
 
   <div *ngIf="clPreferidos">
 
-    
+
 
   </div>
 
