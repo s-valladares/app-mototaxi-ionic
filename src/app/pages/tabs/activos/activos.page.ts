@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FirestoreService } from 'src/app/services/firestore/firestore.service';
-import { IUbicacion } from 'src/app/services/ubicacion/ubicacion.interface';
+import { IUbicacion, Ubicacion } from 'src/app/services/ubicacion/ubicacion.interface';
 import { Client } from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
 import { PilotosService } from 'src/app/services/Pilotos/pilotos.service';
+import { IUbicaciones, Ubicaciones } from 'src/app/services/Ubicaciones/ubicaciones.interface';
+import { IUsuario, Usuario } from 'src/app/services/Usuarios/usuario.interface';
+import { IPersonas, Personas } from 'src/app/services/Personas/personas.interface';
 
 @Component({
   selector: 'app-activos',
@@ -12,7 +15,9 @@ import { PilotosService } from 'src/app/services/Pilotos/pilotos.service';
 })
 export class ActivosPage implements OnInit {
 
-  private ubicaciones: IUbicacion[];
+  private ubicaciones: IUbicaciones;
+  private usuario: IUsuario;
+  private persona: IPersonas;
   pilotos: any[];
   private client: Client;
 
@@ -22,7 +27,9 @@ export class ActivosPage implements OnInit {
     private firestoreService: FirestoreService,
     private service: PilotosService
   ) {
-
+    this.ubicaciones = Ubicaciones.empty();
+    this.usuario = Usuario.empty();
+    this.persona = Personas.empty();
   }
 
   ngOnInit() {
@@ -57,7 +64,7 @@ export class ActivosPage implements OnInit {
   segmentChanged(ev: any) {
     console.log('Segmento activo: ', ev.detail.value);
   }
-
+/*
   getAllActivos() {
     this.firestoreService.getAllPilotos()
       .subscribe((ubicaciones) => {
@@ -81,7 +88,7 @@ export class ActivosPage implements OnInit {
       }, error => alert(error));
 
   }
-
+*/
   getAllPilotos() {
     this.service.getAll()
       .then(data => {
@@ -108,7 +115,18 @@ export class ActivosPage implements OnInit {
   }
 
   enviarMensaje() {
-    this.client.publish({destination: '/api/ubicacion', body: JSON.stringify('3.22')});
+
+    this.usuario.id = '1';
+    this.persona.id = '1';
+
+    this.usuario.persona = this.persona;
+
+    this.ubicaciones.id = '';
+    this.ubicaciones.latitud = '-3';
+    this.ubicaciones.longitud = '-4';
+    this.ubicaciones.usuario = this.usuario;
+    // console.log(this.ubicaciones);
+    this.client.publish({destination: '/api/ubicacion', body: JSON.stringify(this.ubicaciones)});
   }
 
 }

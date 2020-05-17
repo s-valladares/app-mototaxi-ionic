@@ -8,10 +8,8 @@ export interface IUbicacionesRs {
 export interface IUbicaciones {
     id: string;
     usuario: IUsuario;
-    latitud?: boolean;
-    longitud: boolean;
-    createdAt?: string;
-    updatedAt?: string;
+    latitud?: string;
+    longitud: string;
 }
 
 export class Ubicaciones {
@@ -19,10 +17,8 @@ export class Ubicaciones {
         return {
             id: '',
             usuario: Usuario.empty(),
-            licencia: false,
-            activo: false,
-            createdAt: '',
-            updatedAt: ''
+            latitud: '',
+            longitud: ''
         };
     }
 }

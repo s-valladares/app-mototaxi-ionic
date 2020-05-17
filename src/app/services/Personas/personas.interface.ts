@@ -21,7 +21,7 @@ export class Personas {
             nombres: '',
             apellidos: '',
             direccion: '',
-            telefono: 'VentasSemana.empty()',
+            telefono: '',
             createdAt: '',
             updatedAt: ''
         };

@@ -29,6 +29,10 @@
 
   <ion-list>
 
+    <ion-button (click)="enviarMensaje()">
+      Enviar
+    </ion-button>
+
     <ion-item (click)="abrirChat(1)" *ngFor="let item of pilotos">
       <ion-avatar slot="start">
         <img [src]="urlAvatar">
