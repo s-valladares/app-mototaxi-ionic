@@ -46,15 +46,15 @@ export class ActivosPage implements OnInit {
     this.client.onConnect = (frame) => {
       console.log('Conectado: ' + this.client.connected);
 
-      this.client.subscribe('/ubicaciones/ubicacion', e => {
+      this.client.subscribe('/ubicaciones/piloto', e => {
         let mensaje = JSON.parse(e.body);
-        console.log(mensaje);
+        console.log(mensaje.body);
       });
     };
 
     this.client.onDisconnect = (frame) => {
       console.log('Desconectado');
-    }
+    };
 
     this.conectarWSocket();
 
@@ -116,17 +116,11 @@ export class ActivosPage implements OnInit {
 
   enviarMensaje() {
 
-    this.usuario.id = '1';
-    this.persona.id = '1';
-
-    this.usuario.persona = this.persona;
-
-    this.ubicaciones.id = '';
     this.ubicaciones.latitud = '-3';
     this.ubicaciones.longitud = '-4';
-    this.ubicaciones.usuario = this.usuario;
+    this.ubicaciones.usuario.id = '1';
     // console.log(this.ubicaciones);
-    this.client.publish({destination: '/api/ubicacion', body: JSON.stringify(this.ubicaciones)});
+    this.client.publish({destination: '/api/piloto', body: JSON.stringify(this.ubicaciones)});
   }
 
 }
