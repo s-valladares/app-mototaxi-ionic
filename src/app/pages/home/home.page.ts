@@ -76,7 +76,7 @@ export class HomePage implements OnInit {
       component: SettingsComponent,
       cssClass: 'my-custom-modal-css',
       componentProps: {
-        tipoModal: 'notificaciones'
+        tipoModal: 'config'
       }
     });
     return await modal.present();

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-settings',
@@ -10,24 +10,25 @@ export class SettingsComponent implements OnInit {
 
   @Input() tipoModal: string;
 
-  checked: boolean;
-  mensaje: string;
-  notificaciones: boolean;
+  checkedNotificaciones: boolean;
+  checkedPiloto: boolean;
+  config: boolean;
   foto: boolean;
 
   constructor(
-    private modal: ModalController
+    private modal: ModalController,
+    public alertController: AlertController,
   ) {
-    this.notificaciones = false;
+    this.config = false;
     this.foto = false;
 
-    this.checked = true;
-    this.mensaje = 'Recibir';
+    this.checkedNotificaciones = true;
+    this.checkedPiloto = false;
   }
 
   ngOnInit() {
-    if (this.tipoModal === 'notificaciones') {
-      this.notificaciones = true;
+    if (this.tipoModal === 'config') {
+      this.config = true;
     } else {
       this.foto = true;
     }
@@ -39,13 +40,20 @@ export class SettingsComponent implements OnInit {
 
   cambiar() {
 
-    if (this.checked === true) {
-      this.checked = false;
-      this.mensaje = 'No recibir';
+    if (this.checkedNotificaciones === true) {
+      this.checkedNotificaciones = false;
     } else {
-      this.checked = true;
-      this.mensaje = 'Recibir';
+      this.checkedNotificaciones = true;
     }
+  }
+
+  cambiarModoPiloto() {
+    if (!this.checkedPiloto) {
+      this.activarPiloto('iniciar');
+    } else {
+      this.activarPiloto('cancelar');
+    }
+
   }
 
   abrirGaleria() {
@@ -57,7 +65,31 @@ export class SettingsComponent implements OnInit {
   }
 
   eliminarFoto() {
-    
+
+  }
+
+  async activarPiloto(accion) {
+    const alert = await this.alertController.create({
+      header: '¿Iniciar piloto?',
+      message: '<strong>¿Está seguro de ' + accion + ' modo piloto?</strong>',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            this.checkedPiloto = false;
+          }
+        }, {
+          text: 'Seguro',
+          handler: () => {
+            this.checkedPiloto = true;
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 
 }
