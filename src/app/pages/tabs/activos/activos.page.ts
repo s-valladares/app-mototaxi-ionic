@@ -47,13 +47,17 @@ export class ActivosPage implements OnInit {
     this.client.onConnect = (frame) => {
       console.log('Conectado: ' + this.client.connected);
 
-      this.client.subscribe('/ubicaciones/piloto', e => {
-        const mensaje = JSON.parse(e.body);
-        const piloto: IPilotos = Pilotos.empty();
-        piloto.usuario = mensaje.body.RES.usuario;
-        this.pilotos.push(piloto);
-        console.log(piloto);
+      this.client.subscribe('/ubicaciones/piloto-ubicacion', e => {
+
       });
+
+      this.client.subscribe('/ubicaciones/piloto-conectado', e => {
+        // console.log(e.body);
+        this.pilotos.push(JSON.parse(e.body));
+      });
+
+
+
     };
 
     this.client.onDisconnect = (frame) => {
@@ -68,31 +72,32 @@ export class ActivosPage implements OnInit {
   segmentChanged(ev: any) {
     console.log('Segmento activo: ', ev.detail.value);
   }
-/*
-  getAllActivos() {
-    this.firestoreService.getAllPilotos()
-      .subscribe((ubicaciones) => {
 
-        this.ubicaciones = [];
-
-        ubicaciones
-          .forEach((datos: any) => {
-
-            this.ubicaciones.push(datos.payload.doc.data());
-
-            try {
-
-            } catch (error) {
-              alert(error);
-            }
-
-          });
-        console.log(this.ubicaciones);
-
-      }, error => alert(error));
-
-  }
-*/
+  /*
+    getAllActivos() {
+      this.firestoreService.getAllPilotos()
+        .subscribe((ubicaciones) => {
+  
+          this.ubicaciones = [];
+  
+          ubicaciones
+            .forEach((datos: any) => {
+  
+              this.ubicaciones.push(datos.payload.doc.data());
+  
+              try {
+  
+              } catch (error) {
+                alert(error);
+              }
+  
+            });
+          console.log(this.ubicaciones);
+  
+        }, error => alert(error));
+  
+    }
+  */
   getAllPilotos() {
     this.service.getAll()
       .then(data => {
@@ -122,9 +127,16 @@ export class ActivosPage implements OnInit {
 
     this.ubicaciones.latitud = '-3';
     this.ubicaciones.longitud = '-4';
-    this.ubicaciones.usuario.id = '2';
+    this.ubicaciones.usuario.id = '1';
     // console.log(this.ubicaciones);
-    this.client.publish({destination: '/api/piloto', body: JSON.stringify(this.ubicaciones)});
+
+    const piloto: IPilotos = Pilotos.empty();
+    piloto.usuario.id = '3';
+    piloto.usuario.persona.nombres = 'PruebaPilotoNombre';
+    piloto.usuario.persona.apellidos = 'PruebaPilotoApellidos';
+
+    this.client.publish({ destination: '/api/piloto-ubicacion', body: JSON.stringify(this.ubicaciones) });
+    this.client.publish({ destination: '/api/piloto-conectado', body: JSON.stringify(piloto) });
   }
 
 }
