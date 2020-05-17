@@ -7,6 +7,7 @@ import { PilotosService } from 'src/app/services/Pilotos/pilotos.service';
 import { IUbicaciones, Ubicaciones } from 'src/app/services/Ubicaciones/ubicaciones.interface';
 import { IUsuario, Usuario } from 'src/app/services/Usuarios/usuario.interface';
 import { IPersonas, Personas } from 'src/app/services/Personas/personas.interface';
+import { IPilotos, Pilotos } from 'src/app/services/Pilotos/pilotos.interface';
 
 @Component({
   selector: 'app-activos',
@@ -47,8 +48,11 @@ export class ActivosPage implements OnInit {
       console.log('Conectado: ' + this.client.connected);
 
       this.client.subscribe('/ubicaciones/piloto', e => {
-        let mensaje = JSON.parse(e.body);
-        console.log(mensaje.body);
+        const mensaje = JSON.parse(e.body);
+        const piloto: IPilotos = Pilotos.empty();
+        piloto.usuario = mensaje.body.RES.usuario;
+        this.pilotos.push(piloto);
+        console.log(piloto);
       });
     };
 
@@ -118,7 +122,7 @@ export class ActivosPage implements OnInit {
 
     this.ubicaciones.latitud = '-3';
     this.ubicaciones.longitud = '-4';
-    this.ubicaciones.usuario.id = '1';
+    this.ubicaciones.usuario.id = '2';
     // console.log(this.ubicaciones);
     this.client.publish({destination: '/api/piloto', body: JSON.stringify(this.ubicaciones)});
   }
