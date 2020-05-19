@@ -3,9 +3,13 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ConfigService } from './config/config.service';
 
-
 import {
-    UsuarioService, AuthService
+    PersonasService,
+    PilotosService,
+    VehiculosService,
+    UbicacionesService,
+    UsuarioService,
+    AuthService
 } from './services.index';
 
 
@@ -17,10 +21,13 @@ import {
         CommonModule
     ],
     providers: [
-
         UsuarioService,
+        PersonasService,
+        PilotosService,
+        VehiculosService,
+        UbicacionesService,
         AuthService,
-        ConfigService
+        ConfigService,
 
     ]
 })

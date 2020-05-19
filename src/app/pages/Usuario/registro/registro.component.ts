@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalController, IonSlides } from '@ionic/angular';
+import { FormGroup, FormBuilder } from '@angular/forms';
+import { IPersonas } from 'src/app/services/interfaces.index';
 
 @Component({
   selector: 'app-registro',
@@ -8,22 +10,29 @@ import { ModalController, IonSlides } from '@ionic/angular';
 })
 export class RegistroComponent implements OnInit {
 
-  @ViewChild('slideWithNav3', { static: false }) slideWithNav3: IonSlides;
-
+  @ViewChild('slideNav', { static: false }) slideNav: IonSlides;
   sliderThree: any;
+  slideOpts: any;
 
-  slideOpts = {
-    speed: 400,
-    allowTouchMove: false,
-  };
-
-
+  personaForm: FormGroup;
+  mPersona: IPersonas;
 
   constructor(
-    private modal: ModalController
+    private modal: ModalController,
+    private formBuilder: FormBuilder,
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.opcionesSlide();
+    this.generarFormularioPersona();
+  }
+
+  // Move to previous slide
+  slidePrev(object, slideView) {
+    slideView.slidePrev(500).then(() => {
+      console.log('Prev');
+    });
+  }
 
   // Move to Next slide
   slideNext(object, slideView) {
@@ -32,13 +41,28 @@ export class RegistroComponent implements OnInit {
     });
   }
 
-  cerarModal() {
-    this.modal.dismiss();
-
+  newPersona(): boolean {
+    return true;
   }
 
-  b() {
-    console.log('cambiada');
+  cerarModal() {
+    this.modal.dismiss();
+  }
+
+  generarFormularioPersona() {
+    this.personaForm = this.formBuilder.group({
+      nombres: [null],
+      apellidos: [null],
+      direccion: [null],
+      telefono: [null]
+    });
+  }
+
+  opcionesSlide() {
+    this.slideOpts = {
+      speed: 400,
+      allowTouchMove: false,
+    };
   }
 
 }

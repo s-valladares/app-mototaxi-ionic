@@ -9,14 +9,34 @@
 
 <ion-content>
 
-  <ion-slides [options]="slideOpts" #slideWithNav3>
+  <ion-slides [options]="slideOpts" #slideNav>
 
     <ion-slide>
-      <div class="slide">
-        <img src="./slide-1.png" />
-        <h2>Welcome1</h2>
-        <p>The <b>ionic conference app</b> is a practical preview of the ionic framework in action, and a demonstration
-          of proper code use.</p>
+      <div class="slide" style="margin: 20px;">
+        <ion-text style="font-size: large; ">
+          Ingrese los datos por favor
+        </ion-text>
+      </div>
+      <div>
+        <form [formGroup]="personaForm" (ngSubmit)="onFormSubmit()">
+
+          <ion-item>
+            <ion-label position="floating">Nombres: </ion-label>
+            <ion-input type="text" name="nombres" formControlName="nombres"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Apellidos: </ion-label>
+            <ion-input type="text" name="apellidos" formControlName="apellidos"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Dirección: </ion-label>
+            <ion-input type="text" name="direccion" formControlName="direccion"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Teléfono: </ion-label>
+            <ion-input type="text" name="telefono" formControlName="telefono"></ion-input>
+          </ion-item>
+        </form>
       </div>
     </ion-slide>
 
@@ -49,10 +69,28 @@
 </ion-content>
 <div style="margin-bottom: 20px;" class="text-center">
 
-  <ion-fab vertical="bottom" horizontal="center" slot="fixed" (click)="slideNext(sliderThree,slideWithNav3)">
+  <ion-grid>
+    <ion-row class="ion-text-center">
+      <ion-col>
+        <ion-button shape="round" (click)="slidePrev(sliderThree,slideNav)">
+          <ion-icon name="arrow-back"></ion-icon>
+        </ion-button>
+
+        <ion-button shape="round" (click)="slideNext(sliderThree,slideNav)">
+          <ion-icon name="arrow-forward"></ion-icon>
+        </ion-button>
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!--
+  <ion-fab vertical="bottom" horizontal="center" slot="fixed" (click)="slideNext(sliderThree,slideNav)">
     <ion-fab-button>
       <ion-icon name="arrow-forward"></ion-icon>
+      <ion-icon name="arrow-back"></ion-icon>
     </ion-fab-button>
   </ion-fab>
+-->
 
 </div>
