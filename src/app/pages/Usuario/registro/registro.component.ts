@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalController, IonSlides } from '@ionic/angular';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { IPersonas } from 'src/app/services/interfaces.index';
+import { IPersonas, Personas } from 'src/app/services/interfaces.index';
+import { PersonasService } from 'src/app/services/services.index';
+import { runInThisContext } from 'vm';
 
 @Component({
   selector: 'app-registro',
@@ -16,16 +18,34 @@ export class RegistroComponent implements OnInit {
 
   personaForm: FormGroup;
   mPersona: IPersonas;
+  mPersonas: IPersonas[];
 
   constructor(
     private modal: ModalController,
     private formBuilder: FormBuilder,
-  ) { }
+    private servicePersonas: PersonasService
+  ) { 
+    this.mPersona = Personas.empty();
+  }
 
   ngOnInit() {
     this.opcionesSlide();
     this.generarFormularioPersona();
+    // this.getAllPersonas();
   }
+
+  /*
+  getAllPersonas() {
+    this.servicePersonas.All()
+      .then(data => {
+        this.mPersonas = data.rows;
+        console.log(this.mPersonas);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+*/
 
   // Move to previous slide
   slidePrev(object, slideView) {
@@ -37,12 +57,31 @@ export class RegistroComponent implements OnInit {
   // Move to Next slide
   slideNext(object, slideView) {
     slideView.slideNext(500).then(() => {
-      console.log('Next');
+      console.log('Insertarpersona: ');
+      console.log(this.newPersona());
     });
   }
 
+  onSubmit() {
+    this.mPersona = this.personaForm.value as IPersonas;
+    console.log(this.mPersona);
+  }
+
   newPersona(): boolean {
-    return true;
+    this.mPersona = this.personaForm.value as IPersonas;
+    console.log(this.mPersona);
+    let resp = false;
+    this.servicePersonas.newPersona(this.mPersona)
+      .then(data => {
+        console.log(data);
+        resp = true;
+        return resp;
+      })
+      .catch(error => {
+        console.log(error);
+        return resp;
+      });
+    return resp;
   }
 
   cerarModal() {

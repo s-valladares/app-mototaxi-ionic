@@ -7,8 +7,8 @@ import { environment } from '../../../environments/environment';
 @Injectable()
 export class ConfigService {
 
-  public urlLocal = 'http://localhost:5000/';
-  public urlIp  = 'http://192.168.59.1:5000/api/';
+  public urlLocal = 'http://localhost:5000/mototaxi/api/';
+  public urlIp  = 'http://192.168.59.1:5000/mototaxi/api/';
 /*
   public mCfgStatic: IConfigStatic = null;
   lFileConfig: any;

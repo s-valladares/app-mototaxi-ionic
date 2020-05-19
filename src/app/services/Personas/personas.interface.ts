@@ -10,8 +10,8 @@ export interface IPersonas {
     apellidos?: string;
     direccion: string;
     telefono: string;
-    createdAt?: string;
-    updatedAt?: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export class Personas {

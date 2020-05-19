@@ -10,6 +10,8 @@ export interface IUbicaciones {
     usuario: IUsuario;
     latitud?: string;
     longitud: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export class Ubicaciones {
@@ -18,7 +20,9 @@ export class Ubicaciones {
             id: '',
             usuario: Usuario.empty(),
             latitud: '',
-            longitud: ''
+            longitud: '',
+            createdAt: '',
+            updatedAt: ''
         };
     }
 }
