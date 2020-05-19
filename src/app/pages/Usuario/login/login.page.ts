@@ -3,9 +3,10 @@ import { Router } from '@angular/router';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { IUsuario } from 'src/app/services/interfaces.index';
 import { AuthService } from 'src/app/services/services.index';
-import { ToastController } from '@ionic/angular';
+import { ToastController, ModalController } from '@ionic/angular';
 import decode from 'jwt-decode';
 import { SettingsService } from 'src/app/services/settings/settings.service';
+import { RegistroComponent } from '../registro/registro.component';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,8 @@ export class LoginPage implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private authService: AuthService,
-    public toastController: ToastController,
+    private toastController: ToastController,
+    private modalController: ModalController,
     private setting: SettingsService
   ) { }
 
@@ -61,6 +63,16 @@ export class LoginPage implements OnInit {
       position: 'bottom'
     });
     toast.present();
+  }
+
+  async modalRegistro() {
+    const modal = await this.modalController.create({
+      component: RegistroComponent,
+      componentProps: {
+        tipoModal: 'config'
+      }
+    });
+    return await modal.present();
   }
 
 }

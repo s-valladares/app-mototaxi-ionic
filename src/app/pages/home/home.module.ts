@@ -55,7 +55,7 @@ const routes: Routes = [{
   ],
   entryComponents: [
     SettingsComponent,
-    ChatComponent
+    ChatComponent,
   ]
 })
 export class HomePageModule { }

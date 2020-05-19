@@ -7,9 +7,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RegisterPage implements OnInit {
 
+  slideOpts = {
+    initialSlide: 1,
+    speed: 400
+  };
   constructor() { }
 
   ngOnInit() {
   }
 
+  a(){
+    console.log('2');
+  }
 }

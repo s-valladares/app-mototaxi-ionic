@@ -1,17 +1,20 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>register</ion-title>
+  <ion-toolbar color="primary">
+    <ion-button slot="end" fill="clear" color="light" (click)=cerarModal()>
+      <ion-icon name="close"></ion-icon>
+    </ion-button>
+    <ion-title>Registro</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
-  <ion-slides pager="true">
+  <ion-slides [options]="slideOpts" #slideWithNav3>
 
     <ion-slide>
       <div class="slide">
         <img src="./slide-1.png" />
-        <h2>Welcome</h2>
+        <h2>Welcome1</h2>
         <p>The <b>ionic conference app</b> is a practical preview of the ionic framework in action, and a demonstration
           of proper code use.</p>
       </div>
@@ -20,25 +23,36 @@
     <ion-slide>
       <img src="./slide-2.png" />
       <ion-button (click)="a()">a</ion-button>
-      <h2>What is Ionic?</h2>
+      <h2>What is Ionic?2</h2>
       <p><b>Ionic Framework</b> is an open source SDK that enables developers to build high quality mobile apps with web
         technologies like HTML, CSS, and JavaScript.</p>
     </ion-slide>
 
     <ion-slide>
       <img src="./slide-3.png" />
-      <h2>What is Ionic Appflow?</h2>
+      <h2>What is Ionic Appflow?3</h2>
       <p><b>Ionic Appflow</b> is a powerful set of services and features built on top of Ionic Framework that brings a
         totally new level of app development agility to mobile dev teams.</p>
     </ion-slide>
 
     <ion-slide>
       <img src="./slide-4.png" />
-      <h2>Ready to Play?</h2>
+      <h2>Ready to Play?4</h2>
       <ion-button fill="clear">Continue <ion-icon slot="end" name="arrow-forward"></ion-icon>
       </ion-button>
     </ion-slide>
 
+
+
   </ion-slides>
 
 </ion-content>
+<div style="margin-bottom: 20px;" class="text-center">
+
+  <ion-fab vertical="bottom" horizontal="center" slot="fixed" (click)="slideNext(sliderThree,slideWithNav3)">
+    <ion-fab-button>
+      <ion-icon name="arrow-forward"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</div>

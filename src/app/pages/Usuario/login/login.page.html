@@ -22,7 +22,7 @@
 
       <ion-button color="primary" expand="block" class="btn-iniciar" type="submit" [disabled]="!loginForm.valid">Entrar</ion-button>
       <br>
-      <p class="ion-text-center" routerLink="/home/register" color="primary"> <b>Registrarse</b> </p>
+      <p class="ion-text-center" (click)="modalRegistro()" color="primary"> <b>Registrarse</b> </p>
 
     </div>
 

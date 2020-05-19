@@ -16,10 +16,16 @@ import { environment } from '../environments/environment';
 import { ServicesModule } from './services/services.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { RegistroComponent } from './pages/Usuario/registro/registro.component';
 
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
+  declarations: [
+    AppComponent,
+    RegistroComponent
+  ],
+  entryComponents: [
+    RegistroComponent
+  ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
