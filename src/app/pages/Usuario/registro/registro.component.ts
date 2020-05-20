@@ -121,14 +121,14 @@ export class RegistroComponent implements OnInit {
 
           slideView.slideNext(500).then(() => {
             console.log('InsertarUsuario: ');
-
+            this.completed = true;
           });
 
         })
         .catch(error => {
           console.log(error);
           this.registerUsuario = false;
-          this.completed = true;
+
         });
     } else if (this.registerPersona && this.registerUsuario && !this.registerPiloto) {
 
@@ -196,7 +196,7 @@ export class RegistroComponent implements OnInit {
 
   cerarModal() {
 
-    
+
     this.modal.dismiss(this.completed);
   }
 

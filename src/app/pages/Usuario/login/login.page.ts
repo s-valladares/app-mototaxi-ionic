@@ -75,6 +75,9 @@ export class LoginPage implements OnInit {
 
     modal.onDidDismiss().then(data => {
       console.log(data.data);
+      if (data.data) {
+        this.router.navigate(['/home/mapa']);
+      }
 
     }).catch(error => {
     });
