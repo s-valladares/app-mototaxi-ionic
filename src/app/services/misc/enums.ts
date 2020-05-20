@@ -6,9 +6,10 @@ export enum enSesionStg {
     confDymanica = 'DDJ.confDymanica',
 }
 
-export enum enLocalStg {
-    recordarEmail = 'DDJ.recordarEmail',
-    email = 'DDJ.email'
+export enum constantesId {
+    personaId = 'personaId',
+    usuarioId = 'usuarioId',
+    pilotoId = 'pilotoId'
 }
 
 export enum enCRUD {

@@ -3,6 +3,8 @@ import { ModalController, IonSlides } from '@ionic/angular';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { IPersonas, Personas, IUsuario, Usuario, IPilotos, Pilotos } from 'src/app/services/interfaces.index';
 import { PersonasService, UsuarioService, PilotosService } from 'src/app/services/services.index';
+import { LStorage } from 'src/app/services/misc/storage';
+import { constantesId } from 'src/app/services/misc/enums';
 
 @Component({
   selector: 'app-registro',
@@ -94,6 +96,10 @@ export class RegistroComponent implements OnInit {
         .then(data => {
           console.log(data);
           this.mPersona = data;
+
+          // Guardar id en local storage con constantes
+          LStorage.set(constantesId.personaId, this.mPersona.id);
+
           this.registerPersona = true;
 
           slideView.slideNext(500).then(() => {
@@ -117,6 +123,9 @@ export class RegistroComponent implements OnInit {
         .then(data => {
           console.log(data);
           this.mUsuario = data;
+
+          // Guardar id en local storage con constantes
+          LStorage.set(constantesId.usuarioId, this.mUsuario.id);
           this.registerUsuario = true;
 
           slideView.slideNext(500).then(() => {
@@ -155,6 +164,10 @@ export class RegistroComponent implements OnInit {
       .then(data => {
         console.log(data);
         this.mPiloto = data;
+
+        // Guardar id en local storage con constantes
+        LStorage.set(constantesId.pilotoId, this.mPiloto.id);
+
         this.registerPiloto = true;
 
         slideView.slideTo(4, 500).then(() => {
