@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { getHeaders } from '../misc/Headers';
 import { map } from 'rxjs/operators';
-import { IPilotos } from './pilotos.interface';
+import { IPilotos, IPilotosRs } from './pilotos.interface';
 import { ConfigService } from '../config/config.service';
 
 @Injectable({
@@ -10,23 +10,28 @@ import { ConfigService } from '../config/config.service';
 })
 export class PilotosService {
 
-  /** Nombre de recurso ha obtener en la API */
-  private mService = 'pilotos';
-  /** Url obtenida del servicio de configuracion */
-  private mUrl = this.configService.urlLocal;
+ /** Nombre de recurso ha obtener en la API */
+ private mService = 'pilotos';
+ /** Url obtenida del servicio de configuracion */
+ private mUrl = this.configService.urlLocal;
 
-  constructor(
-    private httpClient: HttpClient,
-    private configService: ConfigService
-  ) { }
+ constructor(
+   private httpClient: HttpClient,
+   private configService: ConfigService
+ ) { }
 
-  // Obtener listado de egresos
-  getAll() {
-    return this.httpClient.get(this.mUrl).pipe(
-      map((data: any) => {
-        return data;
-      })).toPromise();
-  }
+   /***
+  * Devuelve listado de personas de tipo IPersonas
+  * @returns listado de dato de Tipo IPersonas
+  */
+ getAllPilotos() {
+  return this.httpClient.get(this.mUrl + this.mService, {
+    headers: getHeaders()
+  }).pipe(
+    map((data: IPilotosRs) => {
+      return data;
+    })).toPromise();
+}
 
   /**
    * Crea una entidad de tipo IPilotos

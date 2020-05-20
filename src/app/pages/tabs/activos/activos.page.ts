@@ -99,7 +99,7 @@ export class ActivosPage implements OnInit {
     }
   */
   getAllPilotos() {
-    this.service.getAll()
+    this.service.getAllPilotos()
       .then(data => {
         this.pilotos = data.rows;
         console.log(data);
