@@ -47,4 +47,18 @@ export class PilotosService {
         return data.RES;
       })).toPromise();
   }
+
+  /**
+   * Obtiene un IPiloto a partir de un IUsuario.id
+   * @Id Recibe un id de IUsuario como parametro
+   * @returns Item de dato de Tipo IPilotos
+   */
+  getPilotoByIdUser(idUsuario) {
+    return this.httpClient.get(this.mUrl + this.mService + '/usuario/' + idUsuario, {
+      headers: getHeaders()
+    }).pipe(
+      map((data: any) => {
+        return data;
+      })).toPromise();
+  }
 }

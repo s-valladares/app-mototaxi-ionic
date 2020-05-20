@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController, AlertController } from '@ionic/angular';
 import { SettingsComponent } from '../settings/settings/settings.component';
 import { Router } from '@angular/router';
+import { PilotosService } from 'src/app/services/services.index';
+import { LStorage } from 'src/app/services/misc/storage';
+import { constantesId } from 'src/app/services/misc/enums';
 
 @Component({
   selector: 'app-home',
@@ -9,6 +12,10 @@ import { Router } from '@angular/router';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
+
+  modoPiloto: boolean;
+  pilotoId: string;
+
   pages = [
     {
       title: 'Mi Perfil',
@@ -31,10 +38,26 @@ export class HomePage implements OnInit {
   constructor(
     public modalController: ModalController,
     public alertController: AlertController,
-    public router: Router
+    public router: Router,
+    public servicePiloto: PilotosService
+
   ) { }
 
   ngOnInit() {
+    this.pilotoId = LStorage.get(constantesId.usuarioId);
+    this.comprobarPiloto();
+  }
+
+  comprobarPiloto() {
+    this.servicePiloto.getPilotoByIdUser(this.pilotoId)
+      .then(data => {
+        console.log(data);
+        this.modoPiloto = true;
+      })
+      .catch(error => {
+        console.log(error.error.mensaje);
+
+      });
   }
 
   accion(p) {

@@ -36,6 +36,10 @@ const routes: Routes = [{
       {
         path: 'register',
         loadChildren: () => import('../Usuario/register/register.module').then( m => m.RegisterPageModule)
+      },
+      {
+        path: 'p-viajes',
+        loadChildren: () => import('../Tabs/p-viajes/p-viajes.module').then( m => m.PViajesPageModule)
       }
 
     ]
