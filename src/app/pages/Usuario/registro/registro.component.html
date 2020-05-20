@@ -71,33 +71,44 @@
       <div>
         <div style="margin: 20px;">
           <ion-text style="font-size: large; ">
-            <h2>Estamos listos para empezar</h2>
-            <p><b>Atención: </b> Actualmente te escuentras registrado como usuario, podrás
+            <h2>Antes de comenzar</h2>
+            <p> Ahora estás registrado como usuario, podrás
               usar la aplicación normalmente, sin embargo, si deseas acceder como piloto debes
               proporcionar datos adicionales.</p>
           </ion-text>
-          <ion-button fill="clear" (click)="slideTo(sliderThree,slideNav)">Omitir<ion-icon slot="end"
+          <ion-button fill="clear" (click)="slideToFinish(sliderThree,slideNav)">Omitir<ion-icon slot="end"
               name="arrow-forward"></ion-icon>
           </ion-button>
-          <form [formGroup]="pilotoForm" (ngSubmit)="onSubmit()">
 
-            <ion-item>
-              <ion-label>
-                Poseo licencia vigente
-              </ion-label>
-              <ion-toggle color="primary" name="licencia" formControlName="licencia"></ion-toggle>
-            </ion-item>
-
-          </form>
+          <ion-item>
+            <ion-label>
+              Registrarme como piloto
+            </ion-label>
+            <ion-toggle color="primary" [(ngModel)]="serPiloto"></ion-toggle>
+          </ion-item>
+          
         </div>
       </div>
 
     </ion-slide>
 
     <ion-slide>
-      <h2>Felicidades</h2>
-      <p>Fuiste registrado como piloto.</p>
-      <ion-button fill="clear">Ir a la aplicación <ion-icon slot="end" name="arrow-forward"></ion-icon>
+      <form [formGroup]="pilotoForm" (ngSubmit)="onSubmit()">
+
+        <ion-item>
+          <ion-label>
+            Poseo licencia vigente
+          </ion-label>
+          <ion-toggle color="primary" name="licencia" formControlName="licencia"></ion-toggle>
+        </ion-item>
+
+      </form>
+    </ion-slide>
+
+    <ion-slide>
+      <h2>¡Listo!</h2>
+      <p>Hemos finalizado el proceso de registro.</p>
+      <ion-button fill="clear" (click)="finalizar()">Ir a la aplicación.<ion-icon slot="end" name="arrow-forward"></ion-icon>
       </ion-button>
     </ion-slide>
 
@@ -115,8 +126,16 @@
           <ion-icon name="arrow-back"></ion-icon>
         </ion-button>
 
-        <ion-button *ngIf="!registerPiloto" shape="round" (click)="slideNext(sliderThree,slideNav)">
+        <ion-button *ngIf="!registerUsuario" shape="round" (click)="slideNext(sliderThree,slideNav)">
           <ion-icon name="arrow-forward"></ion-icon>
+        </ion-button>
+
+        <ion-button *ngIf="serPiloto" shape="round" (click)="slideNext(sliderThree,slideNav)">
+          Registrar piloto
+        </ion-button>
+
+        <ion-button *ngIf="btnFinalizar" shape="round" (click)="registrarPiloto(sliderThree,slideNav)">
+          Finalizar
         </ion-button>
 
       </ion-col>

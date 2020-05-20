@@ -72,6 +72,13 @@ export class LoginPage implements OnInit {
         tipoModal: 'config'
       }
     });
+
+    modal.onDidDismiss().then(data => {
+      console.log(data.data);
+
+    }).catch(error => {
+    });
+
     return await modal.present();
   }
 

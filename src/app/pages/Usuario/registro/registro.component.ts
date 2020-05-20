@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalController, IonSlides } from '@ionic/angular';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { IPersonas, Personas, IUsuario, Usuario, IPilotos } from 'src/app/services/interfaces.index';
+import { IPersonas, Personas, IUsuario, Usuario, IPilotos, Pilotos } from 'src/app/services/interfaces.index';
 import { PersonasService, UsuarioService, PilotosService } from 'src/app/services/services.index';
 
 @Component({
@@ -29,6 +29,10 @@ export class RegistroComponent implements OnInit {
   pilotoForm: FormGroup;
   mPiloto: IPilotos;
   mPilotos: IPilotos[];
+  serPiloto: boolean;
+
+  btnFinalizar: boolean;
+  completed: boolean;
 
   constructor(
     private modal: ModalController,
@@ -42,6 +46,12 @@ export class RegistroComponent implements OnInit {
 
     this.mUsuario = Usuario.empty();
     this.registerUsuario = false;
+
+    this.mPiloto = Pilotos.empty();
+    this.registerPiloto = false;
+    this.serPiloto = false;
+    this.btnFinalizar = false;
+    this.completed = false;
   }
 
   ngOnInit() {
@@ -118,44 +128,65 @@ export class RegistroComponent implements OnInit {
         .catch(error => {
           console.log(error);
           this.registerUsuario = false;
+          this.completed = true;
         });
     } else if (this.registerPersona && this.registerUsuario && !this.registerPiloto) {
 
       /*
-    Registrar Piloto y dar next en slide
+    Ir a registrar piloto
     */
-      this.mPiloto = this.pilotoForm.value as IPilotos;
-      this.mPiloto.usuario = this.mUsuario;
-      this.servicePilotos.newPiloto(this.mPiloto)
-        .then(data => {
-          console.log(data);
-          this.mPiloto = data;
-          this.registerPiloto = true;
+
+      slideView.slideNext(500).then(() => {
+        this.serPiloto = false;
+        this.btnFinalizar = true;
+        console.log('Registrar piloto: ');
+
+      });
 
 
-
-          slideView.slideNext(500).then(() => {
-            console.log('InsertarPiloto: ');
-
-          });
-
-        })
-        .catch(error => {
-          console.log(error);
-          this.registerPiloto = false;
-        });
     }
   }
 
-  slideTo(object, slideView) {
+  registrarPiloto(object, slideView) {
 
-    slideView.slideTo(0, 500).then(() => {
-      console.log('Ir a : ');
+    this.mPiloto = this.pilotoForm.value as IPilotos;
+    this.mPiloto.usuario = this.mUsuario;
+    this.servicePilotos.newPiloto(this.mPiloto)
+      .then(data => {
+        console.log(data);
+        this.mPiloto = data;
+        this.registerPiloto = true;
+
+        slideView.slideTo(4, 500).then(() => {
+          console.log('Finalizado');
+          this.btnFinalizar = false;
+
+        }).catch(error => {
+          console.log(error);
+        });
+
+      })
+      .catch(error => {
+        console.log(error);
+        this.registerPiloto = false;
+      });
+
+  }
+
+  slideToFinish(object, slideView) {
+
+    slideView.slideTo(4, 500).then(() => {
+      console.log('Finalizado');
 
     }).catch(error => {
       console.log(error);
     });
 
+  }
+
+
+  finalizar() {
+    this.cerarModal();
   }
 
   onSubmit() {
@@ -164,7 +195,9 @@ export class RegistroComponent implements OnInit {
   }
 
   cerarModal() {
-    this.modal.dismiss();
+
+    
+    this.modal.dismiss(this.completed);
   }
 
   generarFormularioPersona() {
@@ -192,6 +225,7 @@ export class RegistroComponent implements OnInit {
 
   opcionesSlide() {
     this.slideOpts = {
+      initialSlide: 0,
       speed: 400,
       allowTouchMove: false,
     };
