@@ -44,7 +44,7 @@ export class PersonasService {
       headers: getHeaders()
     }).pipe(
       map((data: any) => {
-        return data;
+        return data.RES;
       })).toPromise();
   }
 }

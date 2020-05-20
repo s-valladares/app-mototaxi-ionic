@@ -12,12 +12,13 @@
   <ion-slides [options]="slideOpts" #slideNav>
 
     <ion-slide>
-      <div class="slide" style="margin: 20px;">
-        <ion-text style="font-size: large; ">
-          Ingrese los datos por favor
-        </ion-text>
-      </div>
+
       <div>
+        <div class="slide" style="margin: 20px;">
+          <ion-text style="font-size: large; ">
+            Por favor ingresa tus datos personales.
+          </ion-text>
+        </div>
         <form [formGroup]="personaForm" (ngSubmit)="onSubmit()">
 
           <ion-item>
@@ -41,24 +42,60 @@
     </ion-slide>
 
     <ion-slide>
-      <img src="./slide-2.png" />
-      <ion-button (click)="a()">a</ion-button>
-      <h2>What is Ionic?2</h2>
-      <p><b>Ionic Framework</b> is an open source SDK that enables developers to build high quality mobile apps with web
-        technologies like HTML, CSS, and JavaScript.</p>
+      <div>
+        <div style="margin: 20px;">
+          <ion-text style="font-size: large; ">
+            Felicidades <b>{{mPersona.nombres}},</b>
+            ahora ingresa tu email y una contraseña para iniciar sesión.
+          </ion-text>
+        </div>
+        <form [formGroup]="usuarioForm" (ngSubmit)="onSubmit()">
+
+          <ion-item>
+            <ion-label position="floating">Correo electrónico: </ion-label>
+            <ion-input type="text" name="email" formControlName="email"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Contraseña: </ion-label>
+            <ion-input type="password" name="password" formControlName="password"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Repite la contraseña: </ion-label>
+            <ion-input type="password"></ion-input>
+          </ion-item>
+        </form>
+      </div>
     </ion-slide>
 
     <ion-slide>
-      <img src="./slide-3.png" />
-      <h2>What is Ionic Appflow?3</h2>
-      <p><b>Ionic Appflow</b> is a powerful set of services and features built on top of Ionic Framework that brings a
-        totally new level of app development agility to mobile dev teams.</p>
+      <div>
+        <div style="margin: 20px;">
+          <ion-text style="font-size: large; ">
+            <h2>Estamos listos para empezar</h2>
+            <p><b>Atención: </b> Actualmente te escuentras registrado como usuario, podrás
+              usar la aplicación normalmente, sin embargo, si deseas acceder como piloto debes
+              proporcionar datos adicionales.</p>
+          </ion-text>
+
+          <form [formGroup]="pilotoForm" (ngSubmit)="onSubmit()">
+
+            <ion-item>
+              <ion-label>
+                Poseo licencia vigente
+              </ion-label>
+              <ion-toggle color="primary" name="licencia" formControlName="licencia"></ion-toggle>
+            </ion-item>
+
+          </form>
+        </div>
+      </div>
+
     </ion-slide>
 
     <ion-slide>
-      <img src="./slide-4.png" />
-      <h2>Ready to Play?4</h2>
-      <ion-button fill="clear">Continue <ion-icon slot="end" name="arrow-forward"></ion-icon>
+      <h2>Felicidades</h2>
+      <p>Fuiste registrado como piloto.</p>
+      <ion-button fill="clear">Ir a la aplicación <ion-icon slot="end" name="arrow-forward"></ion-icon>
       </ion-button>
     </ion-slide>
 
@@ -72,11 +109,11 @@
   <ion-grid>
     <ion-row class="ion-text-center">
       <ion-col>
-        <ion-button shape="round" (click)="slidePrev(sliderThree,slideNav)">
+        <ion-button shape="round" (click)="slidePrev(sliderThree,slideNav)" *ngIf="fregisterPersona">
           <ion-icon name="arrow-back"></ion-icon>
         </ion-button>
 
-        <ion-button shape="round" (click)="slideNext(sliderThree,slideNav)">
+        <ion-button *ngIf="!registerPiloto" shape="round" (click)="slideNext(sliderThree,slideNav)">
           <ion-icon name="arrow-forward"></ion-icon>
         </ion-button>
 
