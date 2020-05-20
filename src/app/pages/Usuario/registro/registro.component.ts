@@ -132,7 +132,7 @@ export class RegistroComponent implements OnInit {
           this.mPiloto = data;
           this.registerPiloto = true;
 
-        
+
 
           slideView.slideNext(500).then(() => {
             console.log('InsertarPiloto: ');
@@ -145,6 +145,17 @@ export class RegistroComponent implements OnInit {
           this.registerPiloto = false;
         });
     }
+  }
+
+  slideTo(object, slideView) {
+
+    slideView.slideTo(0, 500).then(() => {
+      console.log('Ir a : ');
+
+    }).catch(error => {
+      console.log(error);
+    });
+
   }
 
   onSubmit() {

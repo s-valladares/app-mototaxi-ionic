@@ -76,7 +76,9 @@
               usar la aplicación normalmente, sin embargo, si deseas acceder como piloto debes
               proporcionar datos adicionales.</p>
           </ion-text>
-
+          <ion-button fill="clear" (click)="slideTo(sliderThree,slideNav)">Omitir<ion-icon slot="end"
+              name="arrow-forward"></ion-icon>
+          </ion-button>
           <form [formGroup]="pilotoForm" (ngSubmit)="onSubmit()">
 
             <ion-item>
