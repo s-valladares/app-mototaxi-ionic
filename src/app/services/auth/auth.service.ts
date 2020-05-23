@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 export class AuthService {
 
   apiUrl: string;
-  isLoggedIn: boolean;
+  isLoggedIn: boolean; 
   token: any;
 
   constructor(

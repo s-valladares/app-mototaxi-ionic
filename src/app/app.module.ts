@@ -17,6 +17,7 @@ import { ServicesModule } from './services/services.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RegistroComponent } from './pages/Usuario/registro/registro.component';
+import { UrlGuard } from './services/guards/url.guard';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { RegistroComponent } from './pages/Usuario/registro/registro.component';
   ],
   providers: [
     Geolocation,
+    UrlGuard,
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }

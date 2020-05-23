@@ -14,6 +14,7 @@ export class SettingsService {
     EncryptAndStorage.setEncryptStorage(constantesDatosToken.email, pToken.email);
     EncryptAndStorage.setEncryptStorage(constantesDatosToken.exp, pToken.exp);
     EncryptAndStorage.setEncryptStorage(constantesId.usuarioId, pToken.id_usuario);
+    EncryptAndStorage.setEncryptStorage(constantesDatosToken.token, pToken);
 
   }
 }

@@ -6,6 +6,7 @@ import { IonicModule } from '@ionic/angular';
 import { HomePage } from './home.page';
 import { SettingsComponent } from '../settings/settings/settings.component';
 import { ChatComponent } from '../Tabs/mensajes/chat/chat/chat.component';
+import { UrlGuard } from 'src/app/services/guards/url.guard';
 
 const routes: Routes = [{
   path: '',
@@ -19,19 +20,23 @@ const routes: Routes = [{
     [
       {
         path: 'mapa',
-        loadChildren: () => import('../Tabs/mapa/mapa.module').then(m => m.MapaPageModule)
+        loadChildren: () => import('../Tabs/mapa/mapa.module').then(m => m.MapaPageModule),
+        canActivate: [UrlGuard]
       },
       {
         path: 'perfil',
-        loadChildren: () => import('../Usuario/perfil/perfil.module').then(m => m.PerfilPageModule)
+        loadChildren: () => import('../Usuario/perfil/perfil.module').then(m => m.PerfilPageModule),
+        canActivate: [UrlGuard]
       },
       {
         path: 'activos',
-        loadChildren: () => import('../Tabs/activos/activos.module').then( m => m.ActivosPageModule)
+        loadChildren: () => import('../Tabs/activos/activos.module').then( m => m.ActivosPageModule),
+        canActivate: [UrlGuard]
       },
       {
         path: 'mensajes',
-        loadChildren: () => import('../Tabs/mensajes/mensajes.module').then( m => m.MensajesPageModule)
+        loadChildren: () => import('../Tabs/mensajes/mensajes.module').then( m => m.MensajesPageModule),
+        canActivate: [UrlGuard]
       },
       {
         path: 'register',
@@ -39,7 +44,8 @@ const routes: Routes = [{
       },
       {
         path: 'p-viajes',
-        loadChildren: () => import('../Tabs/p-viajes/p-viajes.module').then( m => m.PViajesPageModule)
+        loadChildren: () => import('../Tabs/p-viajes/p-viajes.module').then( m => m.PViajesPageModule),
+        canActivate: [UrlGuard]
       }
 
     ]

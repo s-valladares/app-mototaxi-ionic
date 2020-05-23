@@ -5,6 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { ConfigService } from '../config/config.service';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { LStorage, EncryptAndStorage } from '../misc/storage';
+import { constantesDatosToken } from '../misc/enums';
 
 @Injectable({
   providedIn: 'root'
@@ -18,10 +20,16 @@ export class UsuarioService {
   private mUrlOauth = this.configService.urlAuthLocal;
   private credenciales = this.configService.credenciales;
 
+  isLoggedIn: boolean;
+  token: any;
+
   constructor(
     private httpClient: HttpClient,
     private configService: ConfigService
-  ) { }
+  ) {
+    this.token = EncryptAndStorage.getEncryptStorage(constantesDatosToken.token);
+    this.isLoggedIn = this.token;
+   }
 
   /**
    * Crea una entidad de tipo IUsuarios
@@ -39,7 +47,7 @@ export class UsuarioService {
   }
 
   /**
-   * Crea una entidad de tipo IUsuarios
+   * Hace un post al servidor para iniciar sesión
    * @IUsuarios Recibe un objeto del tipo IUsuarios como parametro
    * @returns Item de dato de Tipo IUsuarios
    */
@@ -50,5 +58,10 @@ export class UsuarioService {
     return this.httpClient.post(this.mUrlOauth, params, {
       headers: getHeadersOauth(this.credenciales)
     });
+  }
+
+  logOut() {
+    LStorage.clear();
+    this.isLoggedIn = false;
   }
 }

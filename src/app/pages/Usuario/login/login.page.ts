@@ -60,10 +60,12 @@ export class LoginPage implements OnInit {
 
     this.usuarioService.loginOauth(this.usuario).subscribe(response => {
       const payload = decode(response.access_token);
-
       this.setting.ecryptAndStorageToken(payload);
 
-
+    }, err => {
+      if (err.status === 400) {
+        alert('Datos incorrectos');
+      }
     });
   }
 

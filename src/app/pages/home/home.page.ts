@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController, AlertController } from '@ionic/angular';
 import { SettingsComponent } from '../settings/settings/settings.component';
 import { Router } from '@angular/router';
-import { PilotosService } from 'src/app/services/services.index';
+import { PilotosService, UsuarioService } from 'src/app/services/services.index';
 import { LStorage } from 'src/app/services/misc/storage';
 import { constantesId } from 'src/app/services/misc/enums';
 
@@ -39,7 +39,8 @@ export class HomePage implements OnInit {
     public modalController: ModalController,
     public alertController: AlertController,
     public router: Router,
-    public servicePiloto: PilotosService
+    public servicePiloto: PilotosService,
+    public serviceUsuario: UsuarioService
 
   ) { }
 
@@ -84,7 +85,7 @@ export class HomePage implements OnInit {
         }, {
           text: 'Salir',
           handler: () => {
-            // this.authService.logout();
+            this.serviceUsuario.logOut();
             this.router.navigate(['/login']);
           }
         }
