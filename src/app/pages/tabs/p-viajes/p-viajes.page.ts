@@ -12,4 +12,8 @@ export class PViajesPage implements OnInit {
   ngOnInit() {
   }
 
+  segmentChanged(ev: any) {
+    console.log('Segmento activo: ', ev.detail.value);
+  }
+
 }

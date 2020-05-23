@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { IUsuario } from 'src/app/services/interfaces.index';
-import { AuthService } from 'src/app/services/services.index';
+import { AuthService, UsuarioService } from 'src/app/services/services.index';
 import { ToastController, ModalController } from '@ionic/angular';
 import decode from 'jwt-decode';
 import { SettingsService } from 'src/app/services/settings/settings.service';
@@ -17,6 +17,7 @@ export class LoginPage implements OnInit {
 
   loginForm: FormGroup;
   mLogin: IUsuario;
+  usuario: IUsuario;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -24,36 +25,49 @@ export class LoginPage implements OnInit {
     private authService: AuthService,
     private toastController: ToastController,
     private modalController: ModalController,
-    private setting: SettingsService
+    private setting: SettingsService,
+    private usuarioService: UsuarioService
   ) { }
 
   ngOnInit() {
-    this.loginForm = this.formBuilder.group({
-      username: [null],
-      password: [null]
-    });
+    this.generarFormLogin();
   }
 
   onFormSubmit() {
 
-    this.mLogin = this.loginForm.value as IUsuario;
+    this.usuario = this.loginForm.value as IUsuario;
+    this.loginOauth();
+    /*
+        this.authService.Login(this.mLogin)
+          .then(res => {
+            this.authService.isLoggedIn = res.token;
+            localStorage.setItem('fly', res.token);
+            this.router.navigate(['/home']);
+            console.log(res.token);
+    
+            const user: any = decode(res.token);
+            this.setting.SetToke(res.token);
+    
+          }).catch(error => {
+            console.log(error);
+            this.presentToast('Credenciales Invalidas');
+          });
+    
+    */
+  }
 
-    this.authService.Login(this.mLogin)
-      .then(res => {
-        this.authService.isLoggedIn = res.token;
-        localStorage.setItem('fly', res.token);
-        this.router.navigate(['/home']);
-        console.log(res.token);
+  loginOauth() {
+    console.log(this.usuario)
+    this.usuarioService.loginOauth(this.usuario).subscribe(response => {
+      console.log(response);
+    });
+  }
 
-        const user: any = decode(res.token);
-        this.setting.SetToke(res.token);
-
-      }).catch(error => {
-        console.log(error);
-        this.presentToast('Credenciales Invalidas');
-      });
-
-
+  generarFormLogin() {
+    this.loginForm = this.formBuilder.group({
+      email: [null],
+      password: [null]
+    });
   }
 
   async presentToast(msg) {

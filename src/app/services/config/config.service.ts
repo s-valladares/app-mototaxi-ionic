@@ -9,6 +9,12 @@ export class ConfigService {
 
   public urlLocal = 'http://localhost:5000/mototaxi/api/';
   public urlIp  = 'http://192.168.59.1:5000/mototaxi/api/';
+
+  public urlAuthLocal = 'http://localhost:5000/oauth/token';
+
+  public credenciales = btoa('ionicapp' + ':' + 'api.mototaxi.6781');
+
+
 /*
   public mCfgStatic: IConfigStatic = null;
   lFileConfig: any;
