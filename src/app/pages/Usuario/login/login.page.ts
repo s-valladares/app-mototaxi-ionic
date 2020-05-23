@@ -57,9 +57,13 @@ export class LoginPage implements OnInit {
   }
 
   loginOauth() {
-    console.log(this.usuario)
+
     this.usuarioService.loginOauth(this.usuario).subscribe(response => {
-      console.log(response);
+      const payload = decode(response.access_token);
+
+      this.setting.ecryptAndStorageToken(payload);
+
+
     });
   }
 

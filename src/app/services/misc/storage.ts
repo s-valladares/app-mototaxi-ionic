@@ -63,3 +63,46 @@ export class LStorage {
     }
   }
 }
+
+// Encriptar y guardar en localStorage
+export class EncryptAndStorage {
+  static clear() {
+    sessionStorage.clear();
+  }
+
+  static set(key: enSesionStg, value: any) {
+    if (environment.encrypt) {
+      this.setEncryptStorage(key, value);
+    } else {
+      sessionStorage.setItem(key, JSON.stringify(value));
+    }
+  }
+
+  static get(key: enSesionStg) {
+    if (environment.encrypt) {
+      return this.getEncryptStorage(key);
+    } else {
+      if (sessionStorage.getItem(key)) {
+        return JSON.parse(sessionStorage.getItem(key));
+      } else {
+        return '';
+      }
+    }
+  }
+
+  static setEncryptStorage(key: any, value: any) {
+    const lKey = Crypt.MD5(key);
+    const lValue = Crypt.encrypt(JSON.stringify(value), lKey);
+    localStorage.setItem(lKey, lValue);
+  }
+
+  static getEncryptStorage(key: any) {
+    const lKey = Crypt.MD5(key);
+    if (localStorage.getItem(lKey)) {
+      const lValue = localStorage.getItem(lKey);
+      return JSON.parse(Crypt.decrypt(lValue, lKey));
+    } else {
+      return '';
+    }
+  }
+}

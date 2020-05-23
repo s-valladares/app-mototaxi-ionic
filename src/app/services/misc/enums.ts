@@ -12,6 +12,14 @@ export enum constantesId {
     pilotoId = 'pilotoId'
 }
 
+export enum constantesDatosToken {
+    persona_apellidos = 'personaId',
+    persona_nombre = 'usuarioId',
+    persona_telefono = 'pilotoId',
+    email = 'email',
+    exp = 'exp'
+}
+
 export enum enCRUD {
     Crear = '1',
     Leer = '2',

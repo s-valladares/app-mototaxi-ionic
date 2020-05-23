@@ -21,7 +21,6 @@ export function getParams(user, pass) {
   params.set('username', user);
   params.set('password', pass);
 
-  console.log(params.toString().replace('%40', '@'));
   return params.toString();
 }
 
