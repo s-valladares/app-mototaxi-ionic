@@ -6,7 +6,7 @@ import { ConfigService } from '../config/config.service';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { LStorage, EncryptAndStorage } from '../misc/storage';
-import { constantesDatosToken } from '../misc/enums';
+import { constantesDatosToken, acciones } from '../misc/enums';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +29,7 @@ export class UsuarioService {
   ) {
     this.token = EncryptAndStorage.getEncryptStorage(constantesDatosToken.token);
     this.isLoggedIn = this.token;
-   }
+  }
 
   /**
    * Crea una entidad de tipo IUsuarios
@@ -61,7 +61,19 @@ export class UsuarioService {
   }
 
   logOut() {
+
+    const r = EncryptAndStorage.getEncryptStorage(acciones.recordar);
+    const e = EncryptAndStorage.getEncryptStorage(constantesDatosToken.email);
+    const p = EncryptAndStorage.getEncryptStorage(acciones.password);
+
+    console.log(r);
+
     LStorage.clear();
     this.isLoggedIn = false;
+    if (r) {
+      EncryptAndStorage.setEncryptStorage(acciones.recordar, r);
+      EncryptAndStorage.setEncryptStorage(acciones.password, p);
+      EncryptAndStorage.setEncryptStorage(constantesDatosToken.email, e);
+    }
   }
 }

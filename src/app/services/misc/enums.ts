@@ -6,6 +6,11 @@ export enum enSesionStg {
     confDymanica = 'DDJ.confDymanica',
 }
 
+export enum acciones {
+    recordar = 'recordar',
+    password = 'password'
+}
+
 export enum constantesId {
     personaId = 'personaId',
     usuarioId = 'usuarioId',

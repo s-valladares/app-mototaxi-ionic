@@ -7,6 +7,8 @@ import { ToastController, ModalController } from '@ionic/angular';
 import decode from 'jwt-decode';
 import { SettingsService } from 'src/app/services/settings/settings.service';
 import { RegistroComponent } from '../registro/registro.component';
+import { EncryptAndStorage } from 'src/app/services/misc/storage';
+import { acciones, constantesDatosToken } from 'src/app/services/misc/enums';
 
 @Component({
   selector: 'app-login',
@@ -62,6 +64,15 @@ export class LoginPage implements OnInit {
       const payload = decode(response.access_token);
       this.setting.ecryptAndStorageToken(payload);
 
+      alert('Bienvenido ');
+
+      EncryptAndStorage.setEncryptStorage(acciones.recordar, this.usuario.recordar);
+
+      if (this.usuario.recordar) {
+        EncryptAndStorage.setEncryptStorage(acciones.password, this.usuario.password);
+      }
+
+      this.router.navigate(['/home']);
     }, err => {
       if (err.status === 400) {
         alert('Datos incorrectos');
@@ -70,9 +81,15 @@ export class LoginPage implements OnInit {
   }
 
   generarFormLogin() {
+
+    const r = EncryptAndStorage.getEncryptStorage(acciones.recordar);
+    const e = EncryptAndStorage.getEncryptStorage(constantesDatosToken.email);
+    const p = EncryptAndStorage.getEncryptStorage(acciones.password);
+
     this.loginForm = this.formBuilder.group({
-      email: [null],
-      password: [null]
+      email: e,
+      password: p,
+      recordar: r
     });
   }
 

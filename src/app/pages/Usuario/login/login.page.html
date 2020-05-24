@@ -18,6 +18,11 @@
         <ion-label position="floating">Contraseña: </ion-label>
         <ion-input type="password" name="password" formControlName="password"></ion-input>
       </ion-item>
+      <ion-item>
+        <ion-label>Recordar mis datos</ion-label>
+        <ion-toggle name="recordar" formControlName="recordar"></ion-toggle>
+      </ion-item>
+      
       <br>
 
       <ion-button color="primary" expand="block" class="btn-iniciar" type="submit" [disabled]="!loginForm.valid">Entrar</ion-button>
