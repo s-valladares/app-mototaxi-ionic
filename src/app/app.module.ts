@@ -19,6 +19,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RegistroComponent } from './pages/Usuario/registro/registro.component';
 import { UrlGuard } from './services/guards/url.guard';
 import { TokenInterceptor } from './services/inteceptors/token.interceptor';
+import { AuthInterceptor } from './services/inteceptors/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,11 @@ import { TokenInterceptor } from './services/inteceptors/token.interceptor';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
       multi: true
     }
   ],
