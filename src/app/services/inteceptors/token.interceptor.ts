@@ -13,62 +13,31 @@ import {
   Router
 } from '@angular/router';
 import { ToastController } from '@ionic/angular';
+import { constantesDatosToken } from '../misc/enums';
+import { EncryptAndStorage } from '../misc/storage';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
 
   constructor(
-    private router: Router,
-    public toastController: ToastController) { }
+    public toastController: ToastController
+  ) { }
 
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-    const token = localStorage.getItem('fly');
+    const token = EncryptAndStorage.getEncryptStorage(constantesDatosToken.token);
+    console.log('token: ');
+    console.log(token);
 
-    if (token) {
-      request = request.clone({
-        setHeaders: {
-          Authorization: 'Bearer ' + token
-        }
+    if (token !== null) {
+      const authReq = req.clone({
+        headers: req.headers.set('Authorization', 'Bearer ' + token)
       });
+
+      return next.handle(authReq);
     }
 
-    if (!request.headers.has('Content-Type')) {
-      request = request.clone({
-        setHeaders: {
-          'content-type': 'application/json'
-        }
-      });
-    }
+    return next.handle(req);
 
-    request = request.clone({
-      headers: request.headers.set('Accept', 'application/json')
-    });
-
-    return next.handle(request).pipe(
-      map((event: HttpEvent<any>) => {
-        if (event instanceof HttpResponse) {
-        }
-        return event;
-      }),
-      catchError((error: HttpErrorResponse) => {
-        if (error.status === 401) {
-          if (error.error.success === false) {
-            this.presentToast('Login failed');
-          } else {
-            this.router.navigate(['login']);
-          }
-        }
-        return throwError(error);
-      }));
-  }
-
-  async presentToast(msg) {
-    const toast = await this.toastController.create({
-      message: msg,
-      duration: 2000,
-      position: 'top'
-    });
-    toast.present();
   }
 }

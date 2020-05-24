@@ -23,7 +23,8 @@ export enum constantesDatosToken {
     persona_telefono = 'pilotoId',
     email = 'email',
     exp = 'exp',
-    token = 'token'
+    token = 'token',
+    token_decode = 'token_decode'
 }
 
 export enum enCRUD {

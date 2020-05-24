@@ -48,15 +48,15 @@ export class LoginPage implements OnInit {
             localStorage.setItem('fly', res.token);
             this.router.navigate(['/home']);
             console.log(res.token);
-    
+
             const user: any = decode(res.token);
             this.setting.SetToke(res.token);
-    
+
           }).catch(error => {
             console.log(error);
             this.presentToast('Credenciales Invalidas');
           });
-    
+
     */
   }
 
@@ -65,6 +65,7 @@ export class LoginPage implements OnInit {
     this.usuarioService.loginOauth(this.usuario).subscribe(response => {
       const payload = decode(response.access_token);
       this.setting.ecryptAndStorageToken(payload);
+      EncryptAndStorage.setEncryptStorage(constantesDatosToken.token, response.access_token);
 
       alert('Bienvenido ');
 

@@ -46,7 +46,7 @@ export class HomePage implements OnInit {
 
   ngOnInit() {
     this.pilotoId = LStorage.get(constantesId.usuarioId);
-    this.comprobarPiloto();
+    // this.comprobarPiloto();
   }
 
   comprobarPiloto() {
