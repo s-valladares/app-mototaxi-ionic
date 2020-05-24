@@ -21,6 +21,8 @@ export class LoginPage implements OnInit {
   mLogin: IUsuario;
   usuario: IUsuario;
 
+  passwordTypeInput = 'password';
+
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
@@ -78,6 +80,15 @@ export class LoginPage implements OnInit {
         alert('Datos incorrectos');
       }
     });
+  }
+
+  togglePasswordMode() {
+    if (this.passwordTypeInput === 'text') {
+      this.passwordTypeInput = 'password';
+    } else {
+      this.passwordTypeInput = 'text';
+    }
+
   }
 
   generarFormLogin() {
