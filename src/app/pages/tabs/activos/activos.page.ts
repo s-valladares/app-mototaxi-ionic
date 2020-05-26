@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FirestoreService } from 'src/app/services/firestore/firestore.service';
 import { IUbicacion, Ubicacion } from 'src/app/services/ubicacion/ubicacion.interface';
 import { Client } from '@stomp/stompjs';
@@ -14,7 +14,7 @@ import { IPilotos, Pilotos } from 'src/app/services/Pilotos/pilotos.interface';
   templateUrl: './activos.page.html',
   styleUrls: ['./activos.page.scss'],
 })
-export class ActivosPage implements OnInit {
+export class ActivosPage implements OnInit, OnDestroy {
 
   private ubicaciones: IUbicaciones;
   private usuario: IUsuario;
@@ -77,32 +77,31 @@ export class ActivosPage implements OnInit {
     getAllActivos() {
       this.firestoreService.getAllPilotos()
         .subscribe((ubicaciones) => {
-  
+
           this.ubicaciones = [];
-  
+
           ubicaciones
             .forEach((datos: any) => {
-  
+
               this.ubicaciones.push(datos.payload.doc.data());
-  
+
               try {
-  
-              } catch (error) {
+
+           } catch (error) {
                 alert(error);
               }
-  
+
             });
           console.log(this.ubicaciones);
-  
+
         }, error => alert(error));
-  
+
     }
   */
   getAllPilotos() {
     this.service.getAllPilotos()
       .then(data => {
         this.pilotos = data.rows;
-        console.log(data);
       })
       .catch(error => {
         console.log(error);
