@@ -118,6 +118,7 @@ export class RegistroComponent implements OnInit {
     Registrar Usuario y dar next en slide
     */
       this.mUsuario = this.usuarioForm.value as IUsuario;
+      this.mUsuario.enabled = true;
       this.mUsuario.persona = this.mPersona;
       this.serviceUsuarios.newUsuario(this.mUsuario)
         .then(data => {

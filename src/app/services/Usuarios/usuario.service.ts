@@ -62,8 +62,6 @@ export class UsuarioService {
     const e = EncryptAndStorage.getEncryptStorage(constantesDatosToken.email);
     const p = EncryptAndStorage.getEncryptStorage(acciones.password);
 
-    console.log(r);
-
     LStorage.clear();
 
     if (r) {

@@ -4,49 +4,34 @@ import {
   HttpHandler,
   HttpEvent,
   HttpInterceptor,
-  HttpResponse,
-  HttpErrorResponse
 } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
-import {
-  Router
-} from '@angular/router';
+import { Observable } from 'rxjs';
 import { ToastController } from '@ionic/angular';
 import { constantesDatosToken } from '../misc/enums';
 import { EncryptAndStorage } from '../misc/storage';
-import { ConfigService } from '../config/config.service';
-import { getHeadersOauth } from '../misc/Headers';
 
 @Injectable()
-export class TokenInterceptor  {
-
-  private credenciales = this.configService.credenciales;
+export class TokenInterceptor implements HttpInterceptor {
 
   constructor(
-    public toastController: ToastController,
-    private configService: ConfigService
+    public toastController: ToastController
   ) { }
 
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
     const token = EncryptAndStorage.getEncryptStorage(constantesDatosToken.token);
-    console.log('token: ');
-    console.log(token);
 
     if (token) {
-      request = request.clone({
+      const authReq = req.clone({
         setHeaders: {
           Authorization: 'Bearer ' + token
         }
       });
+
+      return next.handle(authReq);
     }
 
-    request = request.clone({
-      headers: getHeadersOauth(this.credenciales)
-    });
-
-    return next.handle(request);
+    return next.handle(req);
 
   }
 }

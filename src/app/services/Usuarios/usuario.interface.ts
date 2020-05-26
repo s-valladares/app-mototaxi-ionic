@@ -10,6 +10,7 @@ export interface IUsuario {
     persona: IPersonas;
     email?: string;
     password: string;
+    enabled: boolean;
     recordar?: boolean;
     createdAt?: string;
     updatedAt?: string;
@@ -22,6 +23,7 @@ export class Usuario {
             persona: Personas.empty(),
             email: '',
             password: '',
+            enabled: true,
             recordar: false,
             createdAt: '',
             updatedAt: ''
