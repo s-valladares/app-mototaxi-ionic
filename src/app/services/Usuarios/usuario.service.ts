@@ -20,15 +20,11 @@ export class UsuarioService {
   private mUrlOauth = this.configService.urlAuthLocal;
   private credenciales = this.configService.credenciales;
 
-  isLoggedIn: boolean;
-  token: any;
-
   constructor(
     private httpClient: HttpClient,
     private configService: ConfigService
   ) {
-    this.token = EncryptAndStorage.getEncryptStorage(constantesDatosToken.token);
-    this.isLoggedIn = this.token;
+
   }
 
   /**
@@ -69,11 +65,20 @@ export class UsuarioService {
     console.log(r);
 
     LStorage.clear();
-    this.isLoggedIn = false;
     if (r) {
       EncryptAndStorage.setEncryptStorage(acciones.recordar, r);
       EncryptAndStorage.setEncryptStorage(acciones.password, p);
       EncryptAndStorage.setEncryptStorage(constantesDatosToken.email, e);
     }
+  }
+
+  public isLoggedIn(): boolean {
+
+    const token = EncryptAndStorage.getEncryptStorage(constantesDatosToken.token);
+    if (token) {
+      return true;
+    }
+
+    return false;
   }
 }

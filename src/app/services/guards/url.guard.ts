@@ -15,7 +15,7 @@ export class UrlGuard implements CanActivate {
 
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    if (this.serviceUsuario.isLoggedIn) {
+    if (this.serviceUsuario.isLoggedIn()) {
       return true;
     } else {
       alert('Debes iniciar sesión');

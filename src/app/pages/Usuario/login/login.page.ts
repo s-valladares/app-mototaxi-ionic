@@ -77,6 +77,7 @@ export class LoginPage implements OnInit {
 
       this.router.navigate(['/home']);
     }, err => {
+      console.log(err);
       if (err.status === 400) {
         alert('Datos incorrectos');
       }
