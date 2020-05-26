@@ -37,6 +37,10 @@ export class LoginPage implements OnInit {
     this.generarFormLogin();
   }
 
+  ionViewWillEnter() {
+    this.generarFormLogin();
+  }
+
   onFormSubmit() {
 
     this.usuario = this.loginForm.value as IUsuario;
@@ -64,18 +68,21 @@ export class LoginPage implements OnInit {
 
     this.usuarioService.loginOauth(this.usuario).subscribe(response => {
       const payload = decode(response.access_token);
+      const token = response.access_token;
+
       this.setting.ecryptAndStorageToken(payload);
-      EncryptAndStorage.setEncryptStorage(constantesDatosToken.token, response.access_token);
-
-      alert('Bienvenido ');
-
+      EncryptAndStorage.setEncryptStorage(constantesDatosToken.token, token);
       EncryptAndStorage.setEncryptStorage(acciones.recordar, this.usuario.recordar);
 
       if (this.usuario.recordar) {
         EncryptAndStorage.setEncryptStorage(acciones.password, this.usuario.password);
+        EncryptAndStorage.setEncryptStorage(constantesDatosToken.email, this.usuario.email);
       }
 
+      alert('Bienvenido ');
+
       this.router.navigate(['/home']);
+
     }, err => {
       console.log(err);
       if (err.status === 400) {
@@ -99,11 +106,23 @@ export class LoginPage implements OnInit {
     const e = EncryptAndStorage.getEncryptStorage(constantesDatosToken.email);
     const p = EncryptAndStorage.getEncryptStorage(acciones.password);
 
-    this.loginForm = this.formBuilder.group({
-      email: e,
-      password: p,
-      recordar: r
-    });
+    if (r) {
+      this.loginForm = this.formBuilder.group({
+        email: e,
+        password: p,
+        recordar: r
+      });
+    } else {
+      this.loginForm = this.formBuilder.group({
+        email: [null],
+        password: [null],
+        recordar: [null]
+      });
+    }
+
+
+
+
   }
 
   async presentToast(msg) {

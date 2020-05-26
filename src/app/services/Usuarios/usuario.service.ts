@@ -65,6 +65,7 @@ export class UsuarioService {
     console.log(r);
 
     LStorage.clear();
+
     if (r) {
       EncryptAndStorage.setEncryptStorage(acciones.recordar, r);
       EncryptAndStorage.setEncryptStorage(acciones.password, p);
