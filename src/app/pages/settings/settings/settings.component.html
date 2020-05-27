@@ -21,12 +21,12 @@
         <ion-toggle color="primary" [checked]="checkedNotificaciones" (ionChange)="cambiar()"></ion-toggle>
       </ion-item>
 
-      <ion-item>
+      <ion-item *ngIf="modoPiloto">
         <ion-icon name="car" slot="start"></ion-icon>
         <ion-label>
           Modo piloto
         </ion-label>
-        <ion-toggle color="primary" [checked]="checkedPiloto" (ionChange)="cambiarModoPiloto()"></ion-toggle>
+        <ion-toggle color="primary" [checked]="piloto.activo" (ionChange)="cambiarModoPiloto()"></ion-toggle>
       </ion-item>
 
 
