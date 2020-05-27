@@ -43,7 +43,7 @@ export class SettingsComponent implements OnInit {
       this.foto = true;
     }
 
-    this.pilotoId =  EncryptAndStorage.getEncryptStorage(constantesId.usuarioId);
+    this.pilotoId = EncryptAndStorage.getEncryptStorage(constantesId.usuarioId);
     this.comprobarPiloto();
   }
 
@@ -74,7 +74,7 @@ export class SettingsComponent implements OnInit {
   }
 
   cambiarModoPiloto() {
-   
+
 
   }
 

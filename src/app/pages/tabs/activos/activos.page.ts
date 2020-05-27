@@ -17,6 +17,7 @@ import { IPilotos, Pilotos } from 'src/app/services/Pilotos/pilotos.interface';
 export class ActivosPage implements OnInit, OnDestroy {
 
   private ubicaciones: IUbicaciones;
+  private ubicacion: IUbicaciones;
   private usuario: IUsuario;
   private persona: IPersonas;
   pilotos: any[];
@@ -31,6 +32,7 @@ export class ActivosPage implements OnInit, OnDestroy {
     this.ubicaciones = Ubicaciones.empty();
     this.usuario = Usuario.empty();
     this.persona = Personas.empty();
+    this.ubicacion = Ubicaciones.empty();
   }
 
   ngOnInit() {
@@ -47,8 +49,14 @@ export class ActivosPage implements OnInit, OnDestroy {
     this.client.onConnect = (frame) => {
       console.log('Conectado: ' + this.client.connected);
 
-      this.client.subscribe('/ubicaciones/piloto-ubicacion', e => {
+      this.client.subscribe('/ubicaciones/piloto-on', e => {
+        const data = JSON.parse(e.body);
+        this.ubicacion = data.body.RES;
+        console.log(this.ubicacion);
+      });
 
+      this.client.subscribe('/ubicaciones/piloto-off', e => {
+        console.log(JSON.parse(e.body));
       });
 
       this.client.subscribe('/ubicaciones/piloto-conectado', e => {
@@ -134,8 +142,16 @@ export class ActivosPage implements OnInit, OnDestroy {
     piloto.usuario.persona.nombres = 'PruebaPilotoNombre';
     piloto.usuario.persona.apellidos = 'PruebaPilotoApellidos';
 
-    this.client.publish({ destination: '/api/piloto-ubicacion', body: JSON.stringify(this.ubicaciones) });
+    this.client.publish({ destination: '/api/piloto-on', body: JSON.stringify(this.ubicaciones) });
     this.client.publish({ destination: '/api/piloto-conectado', body: JSON.stringify(piloto) });
+  }
+
+  salir() {
+
+    this.ubicaciones.latitud = '-3';
+    this.ubicaciones.longitud = '-4';
+    this.ubicaciones.usuario.id = '1';
+    this.client.publish({ destination: '/api/piloto-off', body: JSON.stringify(this.ubicacion) });
   }
 
 }
