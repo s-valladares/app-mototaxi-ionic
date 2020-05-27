@@ -3,7 +3,7 @@ import { ModalController, AlertController } from '@ionic/angular';
 import { SettingsComponent } from '../settings/settings/settings.component';
 import { Router } from '@angular/router';
 import { PilotosService, UsuarioService } from 'src/app/services/services.index';
-import { LStorage } from 'src/app/services/misc/storage';
+import { LStorage, EncryptAndStorage } from 'src/app/services/misc/storage';
 import { constantesId } from 'src/app/services/misc/enums';
 
 @Component({
@@ -45,7 +45,7 @@ export class HomePage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.pilotoId = LStorage.get(constantesId.usuarioId);
+    this.pilotoId =  EncryptAndStorage.getEncryptStorage(constantesId.usuarioId);
     this.comprobarPiloto();
   }
 
@@ -56,7 +56,7 @@ export class HomePage implements OnInit {
         this.modoPiloto = true;
       })
       .catch(error => {
-        console.log(error.error.mensaje);
+        console.log(error);
 
       });
   }
