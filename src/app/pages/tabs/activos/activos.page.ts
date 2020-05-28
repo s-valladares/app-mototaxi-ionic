@@ -38,42 +38,9 @@ export class ActivosPage implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.urlAvatar = '../../../../assets/icon/usuario.svg';
-
     this.getAllPilotos();
-
-    this.client = new Client();
-    this.client.webSocketFactory = () => {
-      return new SockJS('http://localhost:5000/mototaxis');
-    };
-
-    this.client.onConnect = (frame) => {
-      console.log('Conectado: ' + this.client.connected);
-
-      this.client.subscribe('/ubicaciones/piloto-on', e => {
-        const data = JSON.parse(e.body);
-        this.ubicacion = data.body.RES;
-        console.log(this.ubicacion);
-      });
-
-      this.client.subscribe('/ubicaciones/piloto-off', e => {
-        console.log(JSON.parse(e.body));
-      });
-
-      this.client.subscribe('/ubicaciones/piloto-conectado', e => {
-        // console.log(e.body);
-        this.pilotos.push(JSON.parse(e.body));
-      });
-
-
-
-    };
-
-    this.client.onDisconnect = (frame) => {
-      console.log('Desconectado');
-    };
-
-    this.conectarWSocket();
-
+    this.configWS();
+    this.activateWS();
     // this.getAllActivos();
   }
 
@@ -82,6 +49,7 @@ export class ActivosPage implements OnInit, OnDestroy {
   }
 
   /*
+
     getAllActivos() {
       this.firestoreService.getAllPilotos()
         .subscribe((ubicaciones) => {
@@ -106,6 +74,7 @@ export class ActivosPage implements OnInit, OnDestroy {
 
     }
   */
+
   getAllPilotos() {
     this.service.getAllPilotos()
       .then(data => {
@@ -117,34 +86,51 @@ export class ActivosPage implements OnInit, OnDestroy {
       });
   }
 
-  conectarWSocket() {
+  activateWS() {
     this.client.activate();
   }
 
-  desconectarWSocket() {
+  deActivateWS() {
     this.client.deactivate();
   }
 
 
   ngOnDestroy() {
-    this.desconectarWSocket();
+    this.deActivateWS();
   }
 
-  enviarMensaje() {
+  configWS() {
+    this.client = new Client();
+    this.client.webSocketFactory = () => {
+      return new SockJS('http://localhost:5000/mototaxis');
+    };
 
-    this.ubicaciones.latitud = '-3';
-    this.ubicaciones.longitud = '-4';
-    this.ubicaciones.usuario.id = '1';
-    // console.log(this.ubicaciones);
+    this.client.onConnect = (frame) => {
+      console.log('Conectado: ' + this.client.connected);
 
-    const piloto: IPilotos = Pilotos.empty();
-    piloto.usuario.id = '3';
-    piloto.usuario.persona.nombres = 'PruebaPilotoNombre';
-    piloto.usuario.persona.apellidos = 'PruebaPilotoApellidos';
+      this.client.subscribe('/ubicaciones/piloto-on', e => {
+        const data = JSON.parse(e.body);
+        this.ubicacion = data.body.RES;
+        console.log(this.ubicacion);
+      });
 
-    this.client.publish({ destination: '/api/piloto-on', body: JSON.stringify(this.ubicaciones) });
-    this.client.publish({ destination: '/api/piloto-conectado', body: JSON.stringify(piloto) });
+      this.client.subscribe('/ubicaciones/piloto-off', e => {
+        console.log(JSON.parse(e.body));
+      });
+
+      this.client.subscribe('/ubicaciones/piloto-conectado', e => {
+        // console.log(e.body);
+        this.pilotos.push(JSON.parse(e.body));
+      });
+
+    };
+
+    this.client.onDisconnect = (frame) => {
+      console.log('Desconectado');
+    };
   }
+
+
 
   salir() {
 

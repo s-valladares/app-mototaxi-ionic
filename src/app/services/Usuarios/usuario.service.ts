@@ -6,7 +6,9 @@ import { ConfigService } from '../config/config.service';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { LStorage, EncryptAndStorage } from '../misc/storage';
-import { constantesDatosToken, acciones } from '../misc/enums';
+import { constantesDatosToken, acciones, constantesId } from '../misc/enums';
+import { PilotosService } from '../Pilotos/pilotos.service';
+import { IPilotos } from '../Pilotos/pilotos.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +24,8 @@ export class UsuarioService {
 
   constructor(
     private httpClient: HttpClient,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private servicePiloto: PilotosService
   ) {
 
   }
@@ -80,5 +83,14 @@ export class UsuarioService {
 
     return false;
   }
-  
+
+  public isPiloto(): boolean {
+
+    if (EncryptAndStorage.getEncryptStorage(constantesId.pilotoId)) {
+      return true;
+    }
+
+    return false;
+  }
+
 }

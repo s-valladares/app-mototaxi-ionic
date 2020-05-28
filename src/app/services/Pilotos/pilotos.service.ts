@@ -4,6 +4,8 @@ import { getHeaders } from '../misc/Headers';
 import { map } from 'rxjs/operators';
 import { IPilotos, IPilotosRs } from './pilotos.interface';
 import { ConfigService } from '../config/config.service';
+import { Client } from '@stomp/stompjs';
+import * as SockJS from 'sockjs-client';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +16,8 @@ export class PilotosService {
  private mService = 'pilotos';
  /** Url obtenida del servicio de configuracion */
  private mUrl = this.configService.urlLocal;
+
+ private client: Client;
 
  constructor(
    private httpClient: HttpClient,
@@ -61,4 +65,5 @@ export class PilotosService {
         return data;
       })).toPromise();
   }
+
 }

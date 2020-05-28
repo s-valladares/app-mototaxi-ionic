@@ -13,8 +13,8 @@ import { constantesId } from 'src/app/services/misc/enums';
 })
 export class HomePage implements OnInit {
 
-  modoPiloto: boolean;
-  pilotoId: string;
+  isPiloto: boolean;
+  usuarioId: string;
 
   pages = [
     {
@@ -45,20 +45,8 @@ export class HomePage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.pilotoId =  EncryptAndStorage.getEncryptStorage(constantesId.usuarioId);
-    this.comprobarPiloto();
-  }
-
-  comprobarPiloto() {
-    this.servicePiloto.getPilotoByIdUser(this.pilotoId)
-      .then(data => {
-        console.log(data);
-        this.modoPiloto = true;
-      })
-      .catch(error => {
-        console.log(error);
-
-      });
+    this.usuarioId = EncryptAndStorage.getEncryptStorage(constantesId.usuarioId);
+    this.isPiloto = this.serviceUsuario.isPiloto();
   }
 
   accion(p) {

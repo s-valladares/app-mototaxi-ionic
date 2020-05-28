@@ -8,7 +8,8 @@ export enum enSesionStg {
 
 export enum acciones {
     recordar = 'recordar',
-    password = 'password'
+    password = 'password',
+    esPiloto = 'esPiloto'
 }
 
 export enum constantesId {
