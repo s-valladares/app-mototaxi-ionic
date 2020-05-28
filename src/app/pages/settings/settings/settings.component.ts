@@ -83,9 +83,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   cambiarModoPiloto() {
     if (this.piloto.activo) {
-      this.activarPiloto('desactivar');
+      this.toggleModoPiloto('desactivar');
     } else {
-      this.activarPiloto('activar');
+      this.toggleModoPiloto('activar');
     }
   }
 
@@ -107,6 +107,17 @@ export class SettingsComponent implements OnInit, OnDestroy {
       return new SockJS('http://localhost:5000/mototaxis');
     };
 
+    this.client.onConnect = (frame) => {
+      console.log('Conectado: ' + this.client.connected);
+
+      this.client.subscribe('/ubicaciones/piloto-on', e => {
+        const data = JSON.parse(e.body);
+        this.ubicacion = data.body.RES;
+        EncryptAndStorage.setEncryptStorage(constantesId.ubicacionPilotoId, this.ubicacion.id);
+      });
+
+    };
+
     this.client.onDisconnect = (frame) => {
       console.log('Desconectado');
     };
@@ -115,15 +126,23 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   }
 
-  enviarMensajeWS() {
+  publishPilotoOn() {
 
     this.ubicacion.latitud = '-3';
     this.ubicacion.longitud = '-4';
-    this.ubicacion.usuario.id = '2';
+    this.ubicacion.usuario.id = this.usuarioId;
 
     this.client.publish({ destination: '/api/piloto-on', body: JSON.stringify(this.ubicacion) });
     this.client.publish({ destination: '/api/piloto-conectado', body: JSON.stringify(this.piloto) });
   }
+
+  publishPilotoOff() {
+    this.ubicacion.id = EncryptAndStorage.getEncryptStorage(constantesId.ubicacionPilotoId);
+    this.ubicacion.usuario.id = EncryptAndStorage.getEncryptStorage(constantesId.usuarioId);
+    this.client.publish({ destination: '/api/piloto-off', body: JSON.stringify(this.ubicacion) });
+  }
+
+
 
   activeClientSocket() {
     this.client.activate();
@@ -135,7 +154,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
 
 
-  async activarPiloto(accion) {
+  async toggleModoPiloto(accion) {
     const alert = await this.alertController.create({
       header: '¿Iniciar piloto?',
       message: '<strong>¿Está seguro de ' + accion + ' modo piloto?</strong>',
@@ -150,8 +169,15 @@ export class SettingsComponent implements OnInit, OnDestroy {
         }, {
           text: 'Seguro',
           handler: () => {
-            // Activar piloto
-            this.enviarMensajeWS();
+            if (accion === 'activar') {
+              console.log('activar');
+              this.publishPilotoOn();
+            } else {
+              console.log('desactivar');
+              this.publishPilotoOff();
+              this.piloto.activo = false;
+            }
+
           }
         }
       ]

@@ -15,7 +15,8 @@ export enum acciones {
 export enum constantesId {
     personaId = 'personaId',
     usuarioId = 'usuarioId',
-    pilotoId = 'pilotoId'
+    pilotoId = 'pilotoId',
+    ubicacionPilotoId = 'ubicacionPilotoId'
 }
 
 export enum constantesDatosToken {

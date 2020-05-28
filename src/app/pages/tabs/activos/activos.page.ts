@@ -8,6 +8,8 @@ import { IUbicaciones, Ubicaciones } from 'src/app/services/Ubicaciones/ubicacio
 import { IUsuario, Usuario } from 'src/app/services/Usuarios/usuario.interface';
 import { IPersonas, Personas } from 'src/app/services/Personas/personas.interface';
 import { IPilotos, Pilotos } from 'src/app/services/Pilotos/pilotos.interface';
+import { EncryptAndStorage } from 'src/app/services/misc/storage';
+import { constantesId } from 'src/app/services/misc/enums';
 
 @Component({
   selector: 'app-activos',
@@ -111,15 +113,17 @@ export class ActivosPage implements OnInit, OnDestroy {
       this.client.subscribe('/ubicaciones/piloto-on', e => {
         const data = JSON.parse(e.body);
         this.ubicacion = data.body.RES;
-        console.log(this.ubicacion);
+        EncryptAndStorage.setEncryptStorage(constantesId.ubicacionPilotoId, this.ubicacion.id);
       });
 
       this.client.subscribe('/ubicaciones/piloto-off', e => {
-        console.log(JSON.parse(e.body));
+        const ubicacion = JSON.parse(e.body);
+        console.log(ubicacion.body.RES);
+        const id = ubicacion.body.RES.usuario.id;
+        this.quitarInactivo(id);
       });
 
       this.client.subscribe('/ubicaciones/piloto-conectado', e => {
-        // console.log(e.body);
         this.pilotos.push(JSON.parse(e.body));
       });
 
@@ -130,14 +134,12 @@ export class ActivosPage implements OnInit, OnDestroy {
     };
   }
 
-
-
-  salir() {
-
-    this.ubicaciones.latitud = '-3';
-    this.ubicaciones.longitud = '-4';
-    this.ubicaciones.usuario.id = '1';
-    this.client.publish({ destination: '/api/piloto-off', body: JSON.stringify(this.ubicacion) });
+  quitarInactivo(id) {
+    console.log(id);
+    this.pilotos = this.pilotos
+      .filter(a =>
+        (a.usuario.id !== id)
+      );
   }
 
 }
