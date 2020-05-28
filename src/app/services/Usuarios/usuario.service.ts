@@ -77,19 +77,12 @@ export class UsuarioService {
   public isLoggedIn(): boolean {
 
     const token = EncryptAndStorage.getEncryptStorage(constantesDatosToken.token);
-    if (token) {
-      return true;
-    }
-
+    if (token) { return true; }
     return false;
   }
 
   public isPiloto(): boolean {
-
-    if (EncryptAndStorage.getEncryptStorage(constantesId.pilotoId)) {
-      return true;
-    }
-
+    if (EncryptAndStorage.getEncryptStorage(constantesId.pilotoId)) { return true; }
     return false;
   }
 

@@ -18,13 +18,13 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   piloto: IPilotos;
   isPiloto: boolean;
+  usuarioId;
 
   checkedNotificaciones: boolean;
   config: boolean;
   foto: boolean;
 
   private ubicacion: IUbicaciones;
-
   private client: Client;
 
   constructor(
@@ -45,6 +45,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.configWS();
     this.configTipoModal();
     this.isPiloto = this.serviceUsuario.isPiloto();
+    this.usuarioId = EncryptAndStorage.getEncryptStorage(constantesId.usuarioId);
+    this.getPilotoByUserId();
   }
 
   ngOnDestroy() {
@@ -57,6 +59,16 @@ export class SettingsComponent implements OnInit, OnDestroy {
     } else {
       this.foto = true;
     }
+  }
+
+  getPilotoByUserId() {
+    this.servicePiloto.getPilotoByIdUser(this.usuarioId)
+      .then(data => {
+        this.piloto = data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
 
@@ -108,15 +120,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.ubicacion.latitud = '-3';
     this.ubicacion.longitud = '-4';
     this.ubicacion.usuario.id = '2';
-    // console.log(this.ubicaciones);
-
-    const piloto: IPilotos = Pilotos.empty();
-    piloto.usuario.id = '3';
-    piloto.usuario.persona.nombres = 'PruebaPilotoNombre';
-    piloto.usuario.persona.apellidos = 'PruebaPilotoApellidos';
 
     this.client.publish({ destination: '/api/piloto-on', body: JSON.stringify(this.ubicacion) });
-    this.client.publish({ destination: '/api/piloto-conectado', body: JSON.stringify(piloto) });
+    this.client.publish({ destination: '/api/piloto-conectado', body: JSON.stringify(this.piloto) });
   }
 
   activeClientSocket() {
