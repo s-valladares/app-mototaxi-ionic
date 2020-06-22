@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { IAuth } from 'src/app/services/interfaces.index';
-import { getHeaders } from '../config/headers';
+import { getHeaders } from '../misc/Headers';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 export class AuthService {
 
   apiUrl: string;
-  isLoggedIn: boolean;
+  isLoggedIn: boolean; 
   token: any;
 
   constructor(
@@ -32,6 +32,15 @@ export class AuthService {
     }).pipe(map((data: any) => {
       return data;
     })).toPromise();
+  }
+
+  Blog() {
+    return this.http.get(this.apiUrl +  'blog', {
+      headers: getHeaders()
+    }).pipe(
+      map((data: any) => {
+        return data;
+      })).toPromise();
   }
 
   logout() {

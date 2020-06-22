@@ -1,4 +1,4 @@
-<ion-menu contentId="content">
+<ion-menu contentId="content" side="end">
     <ion-header>
         <ion-toolbar color="primary">
             <ion-title>Menu</ion-title>
@@ -45,9 +45,14 @@
             <ion-label>Mapa</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button tab="activos">
+        <ion-tab-button *ngIf="!isPiloto" tab="activos">
             <ion-icon name="car"></ion-icon>
             <ion-label>Activos</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button *ngIf="isPiloto" tab="p-viajes">
+            <ion-icon name="car"></ion-icon>
+            <ion-label>Mis viajes</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="mensajes">

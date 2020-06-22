@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController, AlertController } from '@ionic/angular';
 import { SettingsComponent } from '../settings/settings/settings.component';
 import { Router } from '@angular/router';
+import { PilotosService, UsuarioService } from 'src/app/services/services.index';
+import { LStorage, EncryptAndStorage } from 'src/app/services/misc/storage';
+import { constantesId } from 'src/app/services/misc/enums';
 
 @Component({
   selector: 'app-home',
@@ -9,6 +12,10 @@ import { Router } from '@angular/router';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
+
+  isPiloto: boolean;
+  usuarioId: string;
+
   pages = [
     {
       title: 'Mi Perfil',
@@ -31,10 +38,15 @@ export class HomePage implements OnInit {
   constructor(
     public modalController: ModalController,
     public alertController: AlertController,
-    public router: Router
+    public router: Router,
+    public servicePiloto: PilotosService,
+    public serviceUsuario: UsuarioService
+
   ) { }
 
   ngOnInit() {
+    this.usuarioId = EncryptAndStorage.getEncryptStorage(constantesId.usuarioId);
+    this.isPiloto = this.serviceUsuario.isPiloto();
   }
 
   accion(p) {
@@ -61,7 +73,7 @@ export class HomePage implements OnInit {
         }, {
           text: 'Salir',
           handler: () => {
-            // this.authService.logout();
+            this.serviceUsuario.logOut();
             this.router.navigate(['/login']);
           }
         }
@@ -76,7 +88,7 @@ export class HomePage implements OnInit {
       component: SettingsComponent,
       cssClass: 'my-custom-modal-css',
       componentProps: {
-        tipoModal: 'notificaciones'
+        tipoModal: 'config'
       }
     });
     return await modal.present();

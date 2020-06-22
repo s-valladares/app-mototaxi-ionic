@@ -4,16 +4,17 @@
 
 export const environment = {
   production: false,
+  encrypt: true,
   firebase: {
 
-    apiKey: "AIzaSyALgDm-bkj6_gi_KCwal6WMGRT2Jv2hZmA",
-    authDomain: "nombres-718b9.firebaseapp.com",
-    databaseURL: "https://nombres-718b9.firebaseio.com",
-    projectId: "nombres-718b9",
-    storageBucket: "nombres-718b9.appspot.com",
-    messagingSenderId: "686139515907",
-    appId: "1:686139515907:web:b24ce94d90c378a1f71a36",
-    measurementId: "G-H4EE9ZH161"
+    apiKey: 'AIzaSyALgDm-bkj6_gi_KCwal6WMGRT2Jv2hZmA',
+    authDomain: 'nombres-718b9.firebaseapp.com',
+    databaseURL: 'https://nombres-718b9.firebaseio.com',
+    projectId: 'nombres-718b9',
+    storageBucket: 'nombres-718b9.appspot.com',
+    messagingSenderId: '686139515907',
+    appId: '1:686139515907:web:b24ce94d90c378a1f71a36',
+    measurementId: 'G-H4EE9ZH161'
   }
 };
 

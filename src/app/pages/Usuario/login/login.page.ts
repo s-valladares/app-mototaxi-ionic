@@ -2,8 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { IUsuario } from 'src/app/services/interfaces.index';
-import { AuthService } from 'src/app/services/services.index';
-import { ToastController } from '@ionic/angular';
+import { AuthService, UsuarioService } from 'src/app/services/services.index';
+import { ToastController, ModalController } from '@ionic/angular';
+import decode from 'jwt-decode';
+import { SettingsService } from 'src/app/services/settings/settings.service';
+import { RegistroComponent } from '../registro/registro.component';
+import { EncryptAndStorage } from 'src/app/services/misc/storage';
+import { acciones, constantesDatosToken } from 'src/app/services/misc/enums';
 
 @Component({
   selector: 'app-login',
@@ -14,36 +19,108 @@ export class LoginPage implements OnInit {
 
   loginForm: FormGroup;
   mLogin: IUsuario;
+  usuario: IUsuario;
+
+  passwordTypeInput = 'password';
 
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
     private authService: AuthService,
-    public toastController: ToastController
+    private toastController: ToastController,
+    private modalController: ModalController,
+    private setting: SettingsService,
+    private usuarioService: UsuarioService
   ) { }
 
   ngOnInit() {
-    this.loginForm = this.formBuilder.group({
-      username: [null],
-      password: [null]
-    });
+    this.generarFormLogin();
+  }
+
+  ionViewWillEnter() {
+    this.generarFormLogin();
   }
 
   onFormSubmit() {
 
-    this.mLogin = this.loginForm.value as IUsuario;
+    this.usuario = this.loginForm.value as IUsuario;
+    this.loginOauth();
+    /*
+        this.authService.Login(this.mLogin)
+          .then(res => {
+            this.authService.isLoggedIn = res.token;
+            localStorage.setItem('fly', res.token);
+            this.router.navigate(['/home']);
+            console.log(res.token);
 
-    this.authService.Login(this.mLogin)
-      .then(res => {
-        this.authService.isLoggedIn = res.token;
-        localStorage.setItem('fly', res.token);
-        this.router.navigate(['/home']);
-        console.log(res.token);
+            const user: any = decode(res.token);
+            this.setting.SetToke(res.token);
 
-      }).catch(error => {
-        console.log(error);
-        this.presentToast('Credenciales Invalidas');
+          }).catch(error => {
+            console.log(error);
+            this.presentToast('Credenciales Invalidas');
+          });
+
+    */
+  }
+
+  loginOauth() {
+
+    this.usuarioService.loginOauth(this.usuario).subscribe(response => {
+      const payload = decode(response.access_token);
+      const token = response.access_token;
+
+      this.setting.ecryptAndStorageToken(payload);
+      EncryptAndStorage.setEncryptStorage(constantesDatosToken.token, token);
+      EncryptAndStorage.setEncryptStorage(acciones.recordar, this.usuario.recordar);
+
+      if (this.usuario.recordar) {
+        EncryptAndStorage.setEncryptStorage(acciones.password, this.usuario.password);
+        EncryptAndStorage.setEncryptStorage(constantesDatosToken.email, this.usuario.email);
+      }
+
+      alert('Bienvenido ');
+
+      this.router.navigate(['/home']);
+
+    }, err => {
+      console.log(err);
+      if (err.status === 400) {
+        alert('Datos incorrectos');
+      }
+    });
+  }
+
+  togglePasswordMode() {
+    if (this.passwordTypeInput === 'text') {
+      this.passwordTypeInput = 'password';
+    } else {
+      this.passwordTypeInput = 'text';
+    }
+
+  }
+
+  generarFormLogin() {
+
+    const r = EncryptAndStorage.getEncryptStorage(acciones.recordar);
+    const e = EncryptAndStorage.getEncryptStorage(constantesDatosToken.email);
+    const p = EncryptAndStorage.getEncryptStorage(acciones.password);
+
+    if (r) {
+      this.loginForm = this.formBuilder.group({
+        email: e,
+        password: p,
+        recordar: r
       });
+    } else {
+      this.loginForm = this.formBuilder.group({
+        email: [null],
+        password: [null],
+        recordar: [null]
+      });
+    }
+
+
 
 
   }
@@ -55,6 +132,26 @@ export class LoginPage implements OnInit {
       position: 'bottom'
     });
     toast.present();
+  }
+
+  async modalRegistro() {
+    const modal = await this.modalController.create({
+      component: RegistroComponent,
+      componentProps: {
+        tipoModal: 'config'
+      }
+    });
+
+    modal.onDidDismiss().then(data => {
+      console.log(data.data);
+      if (data.data) {
+        this.router.navigate(['/home/mapa']);
+      }
+
+    }).catch(error => {
+    });
+
+    return await modal.present();
   }
 
 }

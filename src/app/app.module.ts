@@ -15,11 +15,20 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
 import { ServicesModule } from './services/services.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { RegistroComponent } from './pages/Usuario/registro/registro.component';
+import { UrlGuard } from './services/guards/url.guard';
+import { TokenInterceptor } from './services/inteceptors/token.interceptor';
+import { AuthInterceptor } from './services/inteceptors/auth.interceptor';
 
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
+  declarations: [
+    AppComponent,
+    RegistroComponent
+  ],
+  entryComponents: [
+    RegistroComponent
+  ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
@@ -33,9 +42,20 @@ import { HttpClientModule } from '@angular/common/http';
   ],
   providers: [
     Geolocation,
+    UrlGuard,
     StatusBar,
     SplashScreen,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

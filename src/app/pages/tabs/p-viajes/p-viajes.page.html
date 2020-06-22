@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Mis viajes</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+
+  <!-- Default Segment -->
+  <!-- Label only -->
+  <ion-segment (ionChange)="segmentChanged($event)" value="pendientes">
+    <ion-segment-button value="pendientes">
+      <ion-label>Pendientes</ion-label>
+      <ion-icon name="alarm"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value="todos">
+      <ion-label>Historial</ion-label>
+      <ion-icon name="pulse"></ion-icon>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-list>
+
+
+  </ion-list>
+
+
+</ion-content>

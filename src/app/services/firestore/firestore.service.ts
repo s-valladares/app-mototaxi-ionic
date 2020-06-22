@@ -19,6 +19,10 @@ export class FirestoreService {
     return this.firestore.collection('ubicaciones').snapshotChanges();
   }
 
+  public getAllPilotos() {
+    return this.firestore.collection('pilotos').snapshotChanges();
+  }
+
   public create(datos) {
     return this.firestore.collection('ubicaciones').add(datos);
   }
