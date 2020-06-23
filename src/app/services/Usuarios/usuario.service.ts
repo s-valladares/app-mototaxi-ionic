@@ -50,13 +50,13 @@ export class UsuarioService {
    * @IUsuarios Recibe un objeto del tipo IUsuarios como parametro
    * @returns Item de dato de Tipo IUsuarios
    */
-  loginOauth(usuario: IUsuario): Observable<any> {
+  loginOauth(usuario: IUsuario) {
 
     const params = getParams(usuario.email, usuario.password);
 
     return this.httpClient.post(this.mUrlOauth, params, {
       headers: getHeadersOauth(this.credenciales)
-    });
+    }).toPromise();
   }
 
   logOut() {
