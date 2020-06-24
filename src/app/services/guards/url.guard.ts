@@ -4,6 +4,8 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from
 import { AuthService } from '../auth/auth.service';
 import { UsuarioService } from '../Usuarios/usuario.service';
 
+import Swal from 'sweetalert2';
+
 @Injectable()
 export class UrlGuard implements CanActivate {
 
@@ -18,8 +20,17 @@ export class UrlGuard implements CanActivate {
     if (this.serviceUsuario.isLoggedIn()) {
       return true;
     } else {
-      alert('Debes iniciar sesión');
+      this.alertError('Debes iniciar sesión', 'Serás enviado al inicio');
       this.router.navigate(['/login']);
     }
+  }
+
+  alertError(mensaje, foot) {
+    Swal.fire({
+      icon: 'error',
+      title: '¡Error!',
+      text: mensaje,
+      footer: foot
+    });
   }
 }

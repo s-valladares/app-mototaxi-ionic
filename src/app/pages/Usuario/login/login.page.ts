@@ -3,12 +3,14 @@ import { Router } from '@angular/router';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { IUsuario } from 'src/app/services/interfaces.index';
 import { AuthService, UsuarioService } from 'src/app/services/services.index';
-import { ToastController, ModalController } from '@ionic/angular';
-import decode from 'jwt-decode';
+import { ToastController, ModalController, LoadingController } from '@ionic/angular';
 import { SettingsService } from 'src/app/services/settings/settings.service';
 import { RegistroComponent } from '../registro/registro.component';
 import { EncryptAndStorage } from 'src/app/services/misc/storage';
 import { acciones, constantesDatosToken } from 'src/app/services/misc/enums';
+
+import decode from 'jwt-decode';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -21,6 +23,8 @@ export class LoginPage implements OnInit {
   mLogin: IUsuario;
   usuario: IUsuario;
 
+  loading: any;
+
   passwordTypeInput = 'password';
 
   constructor(
@@ -30,7 +34,8 @@ export class LoginPage implements OnInit {
     private toastController: ToastController,
     private modalController: ModalController,
     private setting: SettingsService,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private loadingController: LoadingController
   ) { }
 
   ngOnInit() {
@@ -65,7 +70,7 @@ export class LoginPage implements OnInit {
   }
 
   loginOauth() {
-
+    this.presentLoading();
     this.usuarioService.loginOauth(this.usuario).then((response: any) => {
       const payload = decode(response.access_token);
       const token = response.access_token;
@@ -78,12 +83,15 @@ export class LoginPage implements OnInit {
         EncryptAndStorage.setEncryptStorage(acciones.password, this.usuario.password);
         EncryptAndStorage.setEncryptStorage(constantesDatosToken.email, this.usuario.email);
       }
-
-      alert('Bienvenido ');
-
+      this.dismissLoading();
       this.router.navigate(['/home']);
-
-    }).catch(e => alert(e.status));
+    }).catch(e => {
+      this.dismissLoading();
+      if (e.status === 401 || e.status === 400) {
+        this.alertError('Datos incorrectos', e.error.error_description);
+      }
+      console.log(e);
+    });
   }
 
   togglePasswordMode() {
@@ -147,6 +155,28 @@ export class LoginPage implements OnInit {
     });
 
     return await modal.present();
+  }
+
+  async presentLoading() {
+    this.loading = await this.loadingController.create({
+      spinner: 'lines-small',
+      cssClass: 'spinner-loading',
+      message: 'Ingresando...'
+    });
+    await this.loading.present();
+  }
+
+  private dismissLoading() {
+    this.loading.dismiss();
+  }
+
+  alertError(mensaje, foot) {
+    Swal.fire({
+      icon: 'error',
+      title: '¡Error!',
+      text: mensaje,
+      footer: foot
+    });
   }
 
 }

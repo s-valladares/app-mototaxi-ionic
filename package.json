@@ -37,6 +37,7 @@
     "jwt-decode": "^2.2.0",
     "rxjs": "^6.5.5",
     "sockjs-client": "^1.4.0",
+    "sweetalert2": "^9.15.2",
     "tslib": "^1.13.0",
     "zone.js": "~0.9.1"
   },
