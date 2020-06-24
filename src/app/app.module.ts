@@ -20,6 +20,7 @@ import { RegistroComponent } from './pages/Usuario/registro/registro.component';
 import { UrlGuard } from './services/guards/url.guard';
 import { TokenInterceptor } from './services/inteceptors/token.interceptor';
 import { AuthInterceptor } from './services/inteceptors/auth.interceptor';
+import { LoginGuard } from './services/guards/login.guard';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { AuthInterceptor } from './services/inteceptors/auth.interceptor';
   providers: [
     Geolocation,
     UrlGuard,
+    LoginGuard,
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
