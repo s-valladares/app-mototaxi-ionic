@@ -104,7 +104,7 @@ export class ActivosPage implements OnInit, OnDestroy {
   configWS() {
     this.client = new Client();
     this.client.webSocketFactory = () => {
-      return new SockJS('http://localhost:5000/mototaxis');
+      return new SockJS('https://mototaxis-281116.uc.r.appspot.com/mototaxis');
     };
 
     this.client.onConnect = (frame) => {

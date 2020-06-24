@@ -66,7 +66,7 @@ export class LoginPage implements OnInit {
 
   loginOauth() {
 
-    this.usuarioService.loginOauth(this.usuario).subscribe(response => {
+    this.usuarioService.loginOauth(this.usuario).then((response: any) => {
       const payload = decode(response.access_token);
       const token = response.access_token;
 
@@ -83,12 +83,7 @@ export class LoginPage implements OnInit {
 
       this.router.navigate(['/home']);
 
-    }, err => {
-      console.log(err);
-      if (err.status === 400) {
-        alert('Datos incorrectos');
-      }
-    });
+    }).catch(e => alert(e.status));
   }
 
   togglePasswordMode() {
