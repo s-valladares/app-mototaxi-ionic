@@ -168,7 +168,7 @@ export class ActivosPage implements OnInit, OnDestroy {
     this.loading = await this.loadingController.create({
       spinner: 'lines-small',
       cssClass: 'spinner-loading',
-      message: 'Cargando pilotos...'
+      message: 'Conectando...'
     });
     await this.loading.present();
   }
