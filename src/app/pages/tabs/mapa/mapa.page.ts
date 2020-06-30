@@ -9,7 +9,8 @@ import {
   MarkerOptions,
   Marker,
   Environment,
-  GoogleMapsAnimation
+  GoogleMapsAnimation,
+  MarkerIcon
 } from '@ionic-native/google-maps';
 import { IUbicacion, Ubicacion } from 'src/app/services/ubicacion/ubicacion.interface';
 import { FirestoreService } from 'src/app/services/firestore/firestore.service';
@@ -127,14 +128,16 @@ export class MapaPage implements OnInit {
 
   agregarMarcador(lati, lngi) {
 
+    const icono = {
+      url: 'assets/taxi.png',
+      size: {
+        width: 32,
+        height: 24
+      }
+    };
+
     this.optionsMarker = {
-      icon: {
-        url: 'assets/marker_icon.png',
-        size: {
-          width: 32,
-          height: 24
-        }
-      },
+      icon: icono,
 
       position: {
         lat: lati,
@@ -215,6 +218,7 @@ export class MapaPage implements OnInit {
 
   onMapReady() {
     this.creado = true;
+    this.agregarMarcador(this.location.latitud, this.location.longitud);
   }
 
   salir() {
@@ -254,16 +258,16 @@ export class MapaPage implements OnInit {
 
   insertLocFb() {
 
+
+
+    /*
+        this.marker = this.agregarMarcador(this.ubicacion.lat, this.ubicacion.lng);
+        this.ubicacion.marcador = this.marker.getId();
     
-
-/*
-    this.marker = this.agregarMarcador(this.ubicacion.lat, this.ubicacion.lng);
-    this.ubicacion.marcador = this.marker.getId();
-
-    this.firestoreService.create(this.ubicacion)
-      .then(ubicacion => this.ubicacion.id = ubicacion.id)
-      .catch(error => alert(error));
-*/
+        this.firestoreService.create(this.ubicacion)
+          .then(ubicacion => this.ubicacion.id = ubicacion.id)
+          .catch(error => alert(error));
+    */
   }
 
   updateFirestore() {
