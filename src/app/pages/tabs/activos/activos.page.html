@@ -28,6 +28,7 @@
   </ion-segment>
 
   <ion-list>
+
 <!--
     <ion-button (click)="enviarMensaje()">
       Enviar
@@ -37,15 +38,21 @@
       Salir
     </ion-button>
 -->
-    <ion-item (click)="abrirChat(1)" *ngFor="let item of pilotos">
-      <ion-avatar slot="start">
-        <img [src]="urlAvatar">
-      </ion-avatar>
-      <ion-label>
-        <h2><b>{{item.usuario.id}} {{item.usuario.persona.nombres}} {{item.usuario.persona.apellidos}}</b></h2>
-        <p>{{item.usuario.persona.direccion}}</p>
-      </ion-label>
-    </ion-item>
+    <div *ngIf="pilotos.length > 0">
+      <ion-item (click)="abrirChat(1)" *ngFor="let item of pilotos">
+        <ion-avatar slot="start">
+          <img [src]="urlAvatar">
+        </ion-avatar>
+        <ion-label>
+          <h2><b>{{item.usuario.id}} {{item.usuario.persona.nombres}} {{item.usuario.persona.apellidos}}</b></h2>
+          <p>{{item.usuario.persona.direccion}}</p>
+        </ion-label>
+      </ion-item>
+    </div>
+
+    <div *ngIf="pilotos.length == 0" class="ion-padding">
+      <p>No hay pilotos disponibles</p>
+    </div>
     <!--
     <ion-row>
       <ion-col>

@@ -43,6 +43,7 @@ export class ActivosPage implements OnInit, OnDestroy {
     this.usuario = Usuario.empty();
     this.persona = Personas.empty();
     this.ubicacion = Ubicaciones.empty();
+    this.pilotos = [];
   }
 
   ngOnInit() {
