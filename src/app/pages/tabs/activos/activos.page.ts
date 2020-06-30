@@ -10,6 +10,8 @@ import { IPersonas, Personas } from 'src/app/services/Personas/personas.interfac
 import { IPilotos, Pilotos } from 'src/app/services/Pilotos/pilotos.interface';
 import { EncryptAndStorage } from 'src/app/services/misc/storage';
 import { constantesId } from 'src/app/services/misc/enums';
+import { LoadingController } from '@ionic/angular';
+import { ConfigService } from 'src/app/services/config/config.service';
 
 @Component({
   selector: 'app-activos',
@@ -27,9 +29,15 @@ export class ActivosPage implements OnInit, OnDestroy {
 
   urlAvatar: string;
 
+  loading: any;
+
+  private mUrl = this.configService.urlWebSocket;
+
   constructor(
     private firestoreService: FirestoreService,
-    private service: PilotosService
+    private service: PilotosService,
+    private loadingController: LoadingController,
+    private configService: ConfigService
   ) {
     this.ubicaciones = Ubicaciones.empty();
     this.usuario = Usuario.empty();
@@ -102,30 +110,34 @@ export class ActivosPage implements OnInit, OnDestroy {
   }
 
   configWS() {
+    this.presentLoading();
     this.client = new Client();
     this.client.webSocketFactory = () => {
-      return new SockJS('http://localhost:5000/mototaxis');
+      return new SockJS(this.mUrl + '/mototaxis');
     };
 
     this.client.onConnect = (frame) => {
-      console.log('Conectado: ' + this.client.connected);
+      if (this.client.connected) {
+        this.dismissLoading();
+        console.log('Conectado: ' + this.client.connected);
 
-      this.client.subscribe('/ubicaciones/piloto-on', e => {
-        const data = JSON.parse(e.body);
-        this.ubicacion = data.body.RES;
-        EncryptAndStorage.setEncryptStorage(constantesId.ubicacionPilotoId, this.ubicacion.id);
-      });
+        this.client.subscribe('/ubicaciones/piloto-on', e => {
+          const data = JSON.parse(e.body);
+          this.ubicacion = data.body.RES;
+          EncryptAndStorage.setEncryptStorage(constantesId.ubicacionPilotoId, this.ubicacion.id);
+        });
 
-      this.client.subscribe('/ubicaciones/piloto-off', e => {
-        const ubicacion = JSON.parse(e.body);
-        console.log(ubicacion.body.RES);
-        const id = ubicacion.body.RES.usuario.id;
-        this.quitarInactivo(id);
-      });
+        this.client.subscribe('/ubicaciones/piloto-off', e => {
+          const ubicacion = JSON.parse(e.body);
+          console.log(ubicacion.body.RES);
+          const id = ubicacion.body.RES.usuario.id;
+          this.quitarInactivo(id);
+        });
 
-      this.client.subscribe('/ubicaciones/piloto-conectado', e => {
-        this.pilotos.push(JSON.parse(e.body));
-      });
+        this.client.subscribe('/ubicaciones/piloto-conectado', e => {
+          this.pilotos.push(JSON.parse(e.body));
+        });
+      }
 
     };
 
@@ -140,6 +152,19 @@ export class ActivosPage implements OnInit, OnDestroy {
       .filter(a =>
         (a.usuario.id !== id)
       );
+  }
+
+  async presentLoading() {
+    this.loading = await this.loadingController.create({
+      spinner: 'lines-small',
+      cssClass: 'spinner-loading',
+      message: 'Cargando pilotos...'
+    });
+    await this.loading.present();
+  }
+
+  private dismissLoading() {
+    this.loading.dismiss();
   }
 
 }

@@ -1,11 +1,12 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { ModalController, AlertController } from '@ionic/angular';
+import { ModalController, AlertController, LoadingController } from '@ionic/angular';
 import { PilotosService, UsuarioService } from 'src/app/services/services.index';
 import { EncryptAndStorage } from 'src/app/services/misc/storage';
 import { constantesId } from 'src/app/services/misc/enums';
 import { IPilotos, Pilotos, IUbicaciones, Ubicaciones } from 'src/app/services/interfaces.index';
 import { Client } from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
+import { ConfigService } from 'src/app/services/config/config.service';
 
 @Component({
   selector: 'app-settings',
@@ -27,11 +28,17 @@ export class SettingsComponent implements OnInit, OnDestroy {
   private ubicacion: IUbicaciones;
   private client: Client;
 
+  loading: any;
+
+  private mUrl = this.configService.urlWebSocket;
+
   constructor(
     private modal: ModalController,
     private alertController: AlertController,
     private servicePiloto: PilotosService,
-    private serviceUsuario: UsuarioService
+    private serviceUsuario: UsuarioService,
+    private loadingController: LoadingController,
+    private configService: ConfigService
   ) {
     this.config = false;
     this.foto = false;
@@ -42,15 +49,15 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.configWS();
     this.configTipoModal();
     this.isPiloto = this.serviceUsuario.isPiloto();
+    if (this.isPiloto) { this.configWS(); }
     this.usuarioId = EncryptAndStorage.getEncryptStorage(constantesId.usuarioId);
     this.getPilotoByUserId();
   }
 
   ngOnDestroy() {
-    this.deactiveClientSocket();
+    if (this.isPiloto) { this.deactiveClientSocket(); }
   }
 
   configTipoModal() {
@@ -102,19 +109,23 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   configWS() {
+    this.presentLoading();
     this.client = new Client();
     this.client.webSocketFactory = () => {
-      return new SockJS('http://localhost:5000/mototaxis');
+      return new SockJS(this.mUrl + '/mototaxis');
     };
 
     this.client.onConnect = (frame) => {
-      console.log('Conectado: ' + this.client.connected);
+      if (this.client.connected) {
+        this.dismissLoading();
+        console.log('Conectado: ' + this.client.connected);
 
-      this.client.subscribe('/ubicaciones/piloto-on', e => {
-        const data = JSON.parse(e.body);
-        this.ubicacion = data.body.RES;
-        EncryptAndStorage.setEncryptStorage(constantesId.ubicacionPilotoId, this.ubicacion.id);
-      });
+        this.client.subscribe('/ubicaciones/piloto-on', e => {
+          const data = JSON.parse(e.body);
+          this.ubicacion = data.body.RES;
+          EncryptAndStorage.setEncryptStorage(constantesId.ubicacionPilotoId, this.ubicacion.id);
+        });
+      }
 
     };
 
@@ -150,6 +161,19 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   deactiveClientSocket() {
     this.client.deactivate();
+  }
+
+  async presentLoading() {
+    this.loading = await this.loadingController.create({
+      spinner: 'lines-small',
+      cssClass: 'spinner-loading',
+      message: 'Cargando configuraciones...'
+    });
+    await this.loading.present();
+  }
+
+  private dismissLoading() {
+    this.loading.dismiss();
   }
 
 
