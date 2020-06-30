@@ -88,7 +88,7 @@ export class MapaPage implements OnInit {
 
       console.log(resp.coords.latitude);
       console.log(resp.coords.longitude);
-      // this.loadMap();
+      this.loadMap();
 
     }).catch((error) => {
       console.log(error);
@@ -200,8 +200,8 @@ export class MapaPage implements OnInit {
     this.mapOptions = {
       camera: {
         target: {
-          lat: this.ubicacion.lat,
-          lng: this.ubicacion.lng
+          lat: this.location.latitud,
+          lng: this.location.longitud
         },
         zoom: 18,
         tilt: 30
