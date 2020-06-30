@@ -24,12 +24,12 @@ export class HomePage implements OnInit {
       mostrar: 'ok'
     },
     {
-      title: 'Logout',
+      title: 'Salir',
       icon: 'ios-exit',
       mostrar: 'ok'
     },
     {
-      title: 'Settings',
+      title: 'Configurar',
       icon: 'settings',
       mostrar: 'ok'
     }
@@ -50,10 +50,10 @@ export class HomePage implements OnInit {
   }
 
   accion(p) {
-    if (p.title === 'Settings') {
+    if (p.title === 'Configurar') {
       this.presentModal();
     }
-    if (p.title === 'Logout') {
+    if (p.title === 'Salir') {
       this.logout();
     }
   }

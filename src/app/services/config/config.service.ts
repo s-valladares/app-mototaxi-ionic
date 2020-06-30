@@ -6,12 +6,11 @@ import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class ConfigService {
-
-  public urlLocal = 'https://mototaxis-281116.uc.r.appspot.com/mototaxi/api/';
   public urlIp  = 'http://192.168.59.1:5000/mototaxi/api/';
 
-  public urlAuthLocal = 'https://mototaxis-281116.uc.r.appspot.com/oauth/token';
-
+  public urlLocal = 'https://mototaxis.herokuapp.com/mototaxi/api/';
+  public urlAuthLocal = 'https://mototaxis.herokuapp.com/oauth/token';
+  public urlWebSocket = 'https://mototaxis.herokuapp.com';
   public credenciales = btoa('ionicapp' + ':' + 'api.mototaxi.6781');
 
 
