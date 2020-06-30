@@ -16,6 +16,7 @@ import { FirestoreService } from 'src/app/services/firestore/firestore.service';
 import { delay } from 'q';
 import { debounce, debounceTime } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/services.index';
+import { IUbicaciones, Ubicaciones } from 'src/app/services/interfaces.index';
 
 @Component({
   selector: 'app-mapa',
@@ -39,6 +40,8 @@ export class MapaPage implements OnInit {
   public markers: any[];
   public idMarcador: string;
 
+  public location: IUbicaciones;
+
   constructor(
     private geolocation: Geolocation,
     private firestoreService: FirestoreService,
@@ -51,11 +54,13 @@ export class MapaPage implements OnInit {
     this.ubicacion = Ubicacion.empty();
     this.ubicaciones = [];
     this.idMarcador = '';
+
+    this.location = Ubicaciones.empty();
   }
 
   ngOnInit() {
     // this.watchLocation();
-    // this.getLocation();
+    this.getLocation();
     // this.getAll();
     // this.getAllBlog();
   }
@@ -78,13 +83,15 @@ export class MapaPage implements OnInit {
 
   getLocation() {
     this.geolocation.getCurrentPosition().then((resp) => {
-      this.ubicacion.lat = resp.coords.latitude;
-      this.ubicacion.lng = resp.coords.longitude;
+      this.location.latitud = resp.coords.latitude.toString();
+      this.location.longitud = resp.coords.longitude.toString();
 
-      this.loadMap();
+      console.log(resp.coords.latitude);
+      console.log(resp.coords.longitude);
+      // this.loadMap();
 
     }).catch((error) => {
-      alert(error);
+      console.log(error);
     });
   }
 
