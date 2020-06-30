@@ -10,8 +10,9 @@ import { IPersonas, Personas } from 'src/app/services/Personas/personas.interfac
 import { IPilotos, Pilotos } from 'src/app/services/Pilotos/pilotos.interface';
 import { EncryptAndStorage } from 'src/app/services/misc/storage';
 import { constantesId } from 'src/app/services/misc/enums';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, ModalController } from '@ionic/angular';
 import { ConfigService } from 'src/app/services/config/config.service';
+import { ChatComponent } from '../mensajes/chat/chat/chat.component';
 
 @Component({
   selector: 'app-activos',
@@ -26,6 +27,7 @@ export class ActivosPage implements OnInit, OnDestroy {
   private persona: IPersonas;
   pilotos: any[];
   private client: Client;
+  idUsuario: string;
 
   urlAvatar: string;
 
@@ -37,13 +39,15 @@ export class ActivosPage implements OnInit, OnDestroy {
     private firestoreService: FirestoreService,
     private service: PilotosService,
     private loadingController: LoadingController,
-    private configService: ConfigService
+    private configService: ConfigService,
+    public modalController: ModalController
   ) {
     this.ubicaciones = Ubicaciones.empty();
     this.usuario = Usuario.empty();
     this.persona = Personas.empty();
     this.ubicacion = Ubicaciones.empty();
     this.pilotos = [];
+    this.idUsuario = '';
   }
 
   ngOnInit() {
@@ -147,6 +151,11 @@ export class ActivosPage implements OnInit, OnDestroy {
     };
   }
 
+  abrirChat(id: string) {
+    this.idUsuario = id;
+    this.presentModal();
+  }
+
   quitarInactivo(id) {
     console.log(id);
     this.pilotos = this.pilotos
@@ -166,6 +175,16 @@ export class ActivosPage implements OnInit, OnDestroy {
 
   private dismissLoading() {
     this.loading.dismiss();
+  }
+
+  async presentModal() {
+    const modal = await this.modalController.create({
+      component: ChatComponent,
+      componentProps: {
+        idUsuario: this.idUsuario
+      }
+    });
+    return await modal.present();
   }
 
 }
