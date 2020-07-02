@@ -31,8 +31,6 @@ export class ActivosPage implements OnInit, OnDestroy {
 
   urlAvatar: string;
 
-  loading: any;
-
   private mUrl = this.configService.urlWebSocket;
 
   constructor(
@@ -167,16 +165,16 @@ export class ActivosPage implements OnInit, OnDestroy {
   }
 
   async presentLoading() {
-    this.loading = await this.loadingController.create({
+    const loading = await this.loadingController.create({
       spinner: 'lines-small',
       cssClass: 'spinner-loading',
       message: 'Conectando...'
     });
-    await this.loading.present();
+    await loading.present();
   }
 
   private dismissLoading() {
-    this.loading.dismiss();
+    this.loadingController.dismiss();
   }
 
   async presentModal() {

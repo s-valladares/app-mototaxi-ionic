@@ -84,8 +84,8 @@ export class MapaPage implements OnInit {
 
   getLocation() {
     this.geolocation.getCurrentPosition().then((resp) => {
-      this.location.latitud = resp.coords.latitude.toString();
-      this.location.longitud = resp.coords.longitude.toString();
+      this.location.latitud = resp.coords.latitude;
+      this.location.longitud = resp.coords.longitude;
 
       console.log(resp.coords.latitude);
       console.log(resp.coords.longitude);

@@ -7,6 +7,7 @@ import { IPilotos, Pilotos, IUbicaciones, Ubicaciones } from 'src/app/services/i
 import { Client } from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
 import { ConfigService } from 'src/app/services/config/config.service';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
 
 @Component({
   selector: 'app-settings',
@@ -28,8 +29,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
   private ubicacion: IUbicaciones;
   private client: Client;
 
-  loading: any;
-
   private mUrl = this.configService.urlWebSocket;
 
   constructor(
@@ -38,6 +37,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     private servicePiloto: PilotosService,
     private serviceUsuario: UsuarioService,
     private loadingController: LoadingController,
+    private geolocation: Geolocation,
     private configService: ConfigService
   ) {
     this.config = false;
@@ -108,6 +108,18 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   }
 
+  getLocation() {
+    this.geolocation.getCurrentPosition().then((resp) => {
+      this.ubicacion.latitud = resp.coords.latitude;
+      this.ubicacion.longitud = resp.coords.longitude;
+
+      this.publishPilotoOn();
+
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
   configWS() {
     this.presentLoading();
     this.client = new Client();
@@ -139,13 +151,12 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   publishPilotoOn() {
 
-    this.ubicacion.latitud = '-322444';
-    this.ubicacion.longitud = '-422444';
-
     this.piloto.lat = this.ubicacion.latitud;
     this.piloto.lng = this.ubicacion.longitud;
 
     this.ubicacion.usuario.id = this.usuarioId;
+
+    console.log(this.ubicacion);
 
     this.client.publish({ destination: '/api/piloto-on', body: JSON.stringify(this.ubicacion) });
     this.client.publish({ destination: '/api/piloto-conectado', body: JSON.stringify(this.piloto) });
@@ -168,16 +179,16 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   async presentLoading() {
-    this.loading = await this.loadingController.create({
+    const loading = await this.loadingController.create({
       spinner: 'lines-small',
       cssClass: 'spinner-loading',
       message: 'Cargando configuraciones...'
     });
-    await this.loading.present();
+    await loading.present();
   }
 
   private dismissLoading() {
-    this.loading.dismiss();
+    this.loadingController.dismiss();
   }
 
 
@@ -199,7 +210,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
           handler: () => {
             if (accion === 'activar') {
               console.log('activar');
-              this.publishPilotoOn();
+              this.getLocation();
             } else {
               console.log('desactivar');
               this.publishPilotoOff();

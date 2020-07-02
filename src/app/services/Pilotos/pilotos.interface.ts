@@ -10,8 +10,8 @@ export interface IPilotos {
     usuario: IUsuario;
     licencia?: boolean;
     activo: boolean;
-    lat: string;
-    lng: string;
+    lat: number;
+    lng: number;
     createdAt?: string;
     updatedAt?: string;
 }
@@ -23,8 +23,8 @@ export class Pilotos {
             usuario: Usuario.empty(),
             licencia: false,
             activo: false,
-            lat: '',
-            lng: '',
+            lat: 0.0,
+            lng: 0.0,
             createdAt: '',
             updatedAt: ''
         };

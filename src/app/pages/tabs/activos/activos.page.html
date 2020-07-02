@@ -46,7 +46,7 @@
         <ion-label>
           <h2><b>{{item.usuario.id}} {{item.usuario.persona.nombres}} {{item.usuario.persona.apellidos}}</b></h2>
           <p>{{item.usuario.persona.direccion}}</p>
-          <p>{{item.lat}}  {{item.lng}}</p>
+          <p>{{item.lat | number:'1.2-4'}}  {{item.lng | number:'1.2-4'}}</p>
         </ion-label>
       </ion-item>
     </div>
