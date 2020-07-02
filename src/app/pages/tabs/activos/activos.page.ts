@@ -94,6 +94,7 @@ export class ActivosPage implements OnInit, OnDestroy {
     this.service.getAllPilotos()
       .then(data => {
         this.pilotos = data.rows;
+        console.log(this.pilotos);
       })
       .catch(error => {
         console.log(error);
@@ -140,6 +141,7 @@ export class ActivosPage implements OnInit, OnDestroy {
         });
 
         this.client.subscribe('/ubicaciones/piloto-conectado', e => {
+          console.log(JSON.parse(e.body));
           this.pilotos.push(JSON.parse(e.body));
         });
       }

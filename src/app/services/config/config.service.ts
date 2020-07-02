@@ -8,9 +8,9 @@ import { environment } from '../../../environments/environment';
 export class ConfigService {
   public urlIp  = 'http://192.168.59.1:5000/mototaxi/api/';
 
-  public urlLocal = 'https://mototaxis.herokuapp.com/mototaxi/api/';
-  public urlAuthLocal = 'https://mototaxis.herokuapp.com/oauth/token';
-  public urlWebSocket = 'https://mototaxis.herokuapp.com';
+  public urlLocal = 'http://localhost:5000/mototaxi/api/';
+  public urlAuthLocal = 'http://localhost:5000/oauth/token';
+  public urlWebSocket = 'http://localhost:5000';
   public credenciales = btoa('ionicapp' + ':' + 'api.mototaxi.6781');
 
 

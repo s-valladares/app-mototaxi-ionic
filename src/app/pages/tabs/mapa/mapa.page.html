@@ -7,11 +7,11 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <p>Mapa</p>
-  <p>{{location.latitud}}</p><p>{{location.longitud}}</p>
+<ion-content>
+  <p style="margin-left: 10px;"><b>Lat:</b> {{location.latitud | number:'1.2-2'}} <b>Lng:</b> {{location.longitud | number:'1.2-2'}}</p>
 
-  <ion-content class="ion-padding">
-    <div id='mapa' style="height: 80%;"></div>
+  <ion-content>
+    <div id='mapa' style="height: 100%;"></div>
 </ion-content>
+
 </ion-content>

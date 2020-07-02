@@ -139,8 +139,12 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   publishPilotoOn() {
 
-    this.ubicacion.latitud = '-3';
-    this.ubicacion.longitud = '-4';
+    this.ubicacion.latitud = '-322444';
+    this.ubicacion.longitud = '-422444';
+
+    this.piloto.lat = this.ubicacion.latitud;
+    this.piloto.lng = this.ubicacion.longitud;
+
     this.ubicacion.usuario.id = this.usuarioId;
 
     this.client.publish({ destination: '/api/piloto-on', body: JSON.stringify(this.ubicacion) });

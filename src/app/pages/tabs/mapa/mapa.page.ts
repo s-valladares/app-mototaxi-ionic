@@ -128,41 +128,18 @@ export class MapaPage implements OnInit {
 
   agregarMarcador(lati, lngi) {
 
-    const icono = {
-      url: 'assets/taxi.png',
+    const icono: MarkerIcon = {
+      url: 'assets/icon/t2.png',
       size: {
         width: 32,
         height: 24
       }
     };
 
-    this.optionsMarker = {
-      icon: icono,
-
-      position: {
-        lat: lati,
-        lng: lngi
-      },
-      infoWindowAnchor: [16, 0],
-      anchor: [16, 32],
-      draggable: true,
-      flat: false,
-      rotation: 32,
-      visible: true,
-      styles: {
-        'text-align': 'center',
-        'font-style': 'italic',
-        'font-weight': 'bold'
-      },
-
-      zIndex: 0,
-      disableAutoPan: true
-    };
-
-    this.optionsMarker.position.lat = lati;
-    this.optionsMarker.position.lng = lngi;
-
-    return this.map.addMarkerSync(this.optionsMarker);
+    this.map.addMarker({
+      position: { lat: lati, lng: lngi },
+      icon: icono
+   });
 
 
     // this.activar();
